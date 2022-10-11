@@ -1,0 +1,58 @@
+{
+  "name": "vscode-solidity-inspector",
+  "displayName": "vscode-solidity-inspector",
+  "description": "Used to inspect Solidity files and generate output in Yul/ASM",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.72.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
+    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-solidity-inspector.activeFile.irOptimizer",
+        "title": "ir-optimizer",
+        "category": "Solidity Optimizer"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
+        "title": "Solidity: ir-inspect selected file(s)",
+        "category": "Solidity Optimizer"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Solidity Optimizer",
+      "properties": {}
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
+          "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
+        }
+      ]
+    }
+  },
+  "scripts": {},
+  "devDependencies": {
+    "@types/vscode": "^1.72.0",
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "eslint": "^8.24.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.8.4",
+    "@vscode/test-electron": "^2.1.5"
+  },
+  "dependencies": {}
+}
