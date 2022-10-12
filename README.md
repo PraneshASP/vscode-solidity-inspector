@@ -23,9 +23,7 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 
 ---
 
-## Getting Started
-
-### Requirements
+## Requirements
 
 The following will need to be installed in order to use this template. Please follow the links and instructions.
 
@@ -34,32 +32,27 @@ The following will need to be installed in order to use this template. Please fo
   - You can test you've installed them right by running `forge --version` and get an output like: `forge 0.2.0 (f016135 2022-07-04T00:15:02.930499Z)`
   - To get the latest of each, just run `foundryup`
 
-### Usage
+## Usage
 
 The usage of this extension is straightforward. You can inspect the solidity contracts that are under the foundry project in two ways:
 
-1. Select file(s) -> Right click -> `SolidityOptimizer: ir-inspect selected file(s)`
-<figure>
+### 1.) Select file(s) -> Right click -> `SolidityOptimizer: ir-inspect selected file(s)`
+
 <img src="./assets/context-menu.gif" />
-<figcaption><b>VSCode File Explorer menu</b>
-</figcaption>
-</figure>
-
-2. Press `Cmd + Shift + P` -> Search `Solidity Optimizer - ir-optimizer`
-
-<figure>
-<img  src="./assets/ir-opt.gif" />
-<figcaption align="center"><b>IR-Optimized Output</b>
-</figcaption>
-</figure>
 
 ---
 
-<figure>
+### 2.) Press `Cmd + Shift + P` -> Search `Solidity Optimizer - ir-optimizer`
+
+#### IR-Optimized Output:
+
+<img  src="./assets/ir-opt.gif" />
+
+---
+
+#### ASM-Optimized Output:
+
 <img src="./assets/asm-opt.gif" />
-<figcaption align="center"><b>ASM-Optimized Output</b>
-</figcaption>
-</figure>
 
 ---
 
