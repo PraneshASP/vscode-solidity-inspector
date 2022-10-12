@@ -7,8 +7,19 @@
     "vscode": "^1.72.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
+  "keywords": [
+    "ethereum",
+    "solidity"
+  ],
+  "bugs": {
+    "url": "https://github.com/PraneshASP/vscode-solidity-inspector/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PraneshASP/vscode-solidity-inspector"
+  },
   "activationEvents": [
     "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
     "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer"
