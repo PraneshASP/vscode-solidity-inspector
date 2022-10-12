@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
-    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer"
+    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer",
+    "onCommand:vscode-solidity-inspector.activeFile.asmOptimizer"
   ],
   "main": "./src/extension.js",
   "contributes": {
@@ -24,6 +25,11 @@
       {
         "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
         "title": "Solidity: ir-inspect selected file(s)",
+        "category": "Solidity Optimizer"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.asmOptimizer",
+        "title": "asm-optimizer",
         "category": "Solidity Optimizer"
       }
     ],
