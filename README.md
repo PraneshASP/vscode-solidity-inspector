@@ -10,7 +10,7 @@ An extension for VSCode editor to inspect the Solidity smartcontracts and genera
 
 ## Motivation:
 
-0age 👑 dropped the optimization alpha in his tweet and when I tried it out for the first time it was really a cool trick. The tweet has the configuration for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contracts, it would be handy for the buildoors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations.
+0age 👑 dropped the optimization alpha in his tweet and when I tried it out for the first time I thought it was really a cool trick. The tweet has the configuration only for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contract in the CLI, it would be handy for the buildoors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations.
 
 TL;DR, this is my first VSCode extension, so feel free to provide feedback as I know that there's a plenty of room for improvements, as always^^
 
@@ -38,14 +38,14 @@ The following will need to be installed in order to use this template. Please fo
 
 The usage of this extension is straightforward. You can inspect the solidity contracts that are under the foundry project in two ways:
 
-1. Select file(s) -> Right click -> `SolidityOptimizer: ir-optimize selected file(s)`
+1. Select file(s) -> Right click -> `SolidityOptimizer: ir-inspect selected file(s)`
 <figure>
 <img src="./assets/context-menu.gif" />
 <figcaption><b>VSCode File Explorer menu</b>
 </figcaption>
 </figure>
 
-2. Press `Cmd + Shift + P` -> Search `Solidity Optimizer - ir-optimize`
+2. Press `Cmd + Shift + P` -> Search `Solidity Optimizer - ir-optimizer`
 
 <figure>
 <img  src="./assets/ir-opt.gif" />
@@ -53,11 +53,15 @@ The usage of this extension is straightforward. You can inspect the solidity con
 </figcaption>
 </figure>
 
+---
+
 <figure>
 <img src="./assets/asm-opt.gif" />
 <figcaption align="center"><b>ASM-Optimized Output</b>
 </figcaption>
 </figure>
+
+---
 
 <!-- CONTRIBUTING -->
 
