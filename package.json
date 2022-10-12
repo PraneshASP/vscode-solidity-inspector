@@ -25,7 +25,7 @@
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
-        "title": "Solidity: ir-inspect selected file(s)",
+        "title": "SolidityOptimizer: ir-inspect selected file(s)",
         "category": "Solidity Optimizer"
       },
       {
@@ -35,7 +35,7 @@
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.asmOptimizer",
-        "title": "Solidity: asm-inspect selected file(s)",
+        "title": "SolidityOptimizer: asm-inspect selected file(s)",
         "category": "Solidity Optimizer"
       }
     ],
