@@ -22,7 +22,7 @@ function newWindowBeside(content) {
     );
 }
 
-function getAppRootDir(currentDir) {
+function getContractRootDir(currentDir) {
   while (!fs.existsSync(path.join(currentDir, "foundry.toml"))) {
     currentDir = path.join(currentDir, "..");
   }
@@ -44,7 +44,9 @@ function onActivate(context) {
           contractName = contractName.substring(0, contractName.length - 4);
           contractPathArray.pop();
 
-          let contractDir = await getAppRootDir(contractPathArray.join("/"));
+          let contractDir = await getContractRootDir(
+            contractPathArray.join("/")
+          );
 
           cp.exec(
             `cd ${contractDir} && forge inspect ${contractName} ir-optimized`,
@@ -81,7 +83,9 @@ function onActivate(context) {
 
           contractPathArray.pop();
 
-          let contractDir = await getAppRootDir(contractPathArray.join("/"));
+          let contractDir = await getContractRootDir(
+            contractPathArray.join("/")
+          );
 
           cp.exec(
             `cd ${contractDir} && forge inspect ${contractName} ir-optimized`,
@@ -113,7 +117,9 @@ function onActivate(context) {
           contractName = contractName.substring(0, contractName.length - 4);
           contractPathArray.pop();
 
-          let contractDir = await getAppRootDir(contractPathArray.join("/"));
+          let contractDir = await getContractRootDir(
+            contractPathArray.join("/")
+          );
 
           cp.exec(
             `cd ${contractDir} && forge inspect ${contractName} asm-optimized`,
@@ -149,7 +155,9 @@ function onActivate(context) {
 
           contractPathArray.pop();
 
-          let contractDir = await getAppRootDir(contractPathArray.join("/"));
+          let contractDir = await getContractRootDir(
+            contractPathArray.join("/")
+          );
 
           cp.exec(
             `cd ${contractDir} && forge inspect ${contractName} asm-optimized`,
