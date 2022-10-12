@@ -22,7 +22,9 @@
   },
   "activationEvents": [
     "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
-    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer"
+    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer",
+    "onCommand:vscode-solidity-inspector.activeFile.asmOptimizer",
+    "onCommand:vscode-solidity-inspector.contextMenu.asmOptimizer"
   ],
   "main": "./src/extension.js",
   "contributes": {
@@ -34,7 +36,17 @@
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
-        "title": "Solidity: ir-inspect selected file(s)",
+        "title": "SolidityOptimizer: ir-inspect selected file(s)",
+        "category": "Solidity Optimizer"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.asmOptimizer",
+        "title": "asm-optimizer",
+        "category": "Solidity Optimizer"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.asmOptimizer",
+        "title": "SolidityOptimizer: asm-inspect selected file(s)",
         "category": "Solidity Optimizer"
       }
     ],
@@ -48,6 +60,11 @@
         {
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
+          "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.asmOptimizer",
           "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
         }
       ]
