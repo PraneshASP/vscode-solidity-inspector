@@ -23,9 +23,15 @@ function newWindowBeside(content) {
 }
 
 function getContractRootDir(currentDir) {
-  while (!fs.existsSync(path.join(currentDir, "foundry.toml"))) {
+  while (
+    !fs.existsSync(path.join(currentDir, "foundry.toml")) &&
+    !fs.existsSync(path.join(currentDir, "hardhat.config.js")) &&
+    !fs.existsSync(path.join(currentDir, "hardhat.config.ts"))
+  ) {
     currentDir = path.join(currentDir, "..");
   }
+
+  console.log("**Current dir", currentDir);
   return currentDir;
 }
 
