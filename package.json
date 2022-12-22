@@ -31,7 +31,8 @@
     "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer",
     "onCommand:vscode-solidity-inspector.activeFile.asmOptimizer",
     "onCommand:vscode-solidity-inspector.contextMenu.asmOptimizer",
-    "onCommand:vscode-solidity-inspector.activeFile.storageLayout"
+    "onCommand:vscode-solidity-inspector.activeFile.storageLayout",
+    "onCommand:vscode-solidity-inspector.contextMenu.storageLayout"
   ],
   "main": "./src/extension.js",
   "contributes": {
@@ -58,6 +59,11 @@
       },
       {
         "command": "vscode-solidity-inspector.activeFile.storageLayout",
+        "title": "storage-layout",
+        "category": "Solidity Optimizer"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.storageLayout",
         "title": "SolidityOptimizer: storage-layout for selected file(s)",
         "category": "Solidity Optimizer"
       }
@@ -77,6 +83,11 @@
         {
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.asmOptimizer",
+          "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.storageLayout",
           "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
         }
       ]
