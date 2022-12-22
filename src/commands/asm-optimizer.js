@@ -33,4 +33,32 @@ async function asmOptimizerActiveFile(args) {
   }
 }
 
-module.exports = { asmOptimizerActiveFile };
+async function asmOptimizerContextMenu(clickedFile, selectedFiles) {
+  for (let index = 0; index < selectedFiles.length; index++) {
+    const activeFile = selectedFiles[index].path;
+    if (!activeFile.endsWith(".sol")) continue;
+
+    const contractPathArray = activeFile.split("/");
+    let contractName = contractPathArray[contractPathArray.length - 1];
+    contractName = contractName.substring(0, contractName.length - 4);
+
+    contractPathArray.pop();
+
+    let contractDir = await getContractRootDir(contractPathArray.join("/"));
+
+    cp.exec(
+      `cd ${contractDir} && forge inspect ${contractName} asm-optimized`,
+      (err, stdout, stderr) => {
+        if (err) {
+          vscode.window.showErrorMessage(
+            `[Optimization failed] ${contractName}\n${err.message}\n\nNOTE: Please make sure to install 'forge' before using this extension`
+          );
+          console.error(err);
+        }
+        newWindowBeside(stdout);
+      }
+    );
+  }
+}
+
+module.exports = { asmOptimizerActiveFile, asmOptimizerContextMenu };
