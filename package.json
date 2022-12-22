@@ -1,8 +1,8 @@
 {
   "name": "vscode-solidity-inspector",
-  "displayName": "vscode-solidity-inspector",
+  "displayName": "Solidity Inspector",
   "description": "Used to inspect Solidity files and generate output in Yul/ASM",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -11,8 +11,13 @@
   ],
   "keywords": [
     "ethereum",
-    "solidity"
+    "solidity",
+    "solidity-inspector",
+    "solidity-optimizer",
+    "forge-inspector"
   ],
+  "publisher": "PraneshASP",
+  "homepage": "https://github.com/PraneshASP/vscode-solidity-inspector",
   "bugs": {
     "url": "https://github.com/PraneshASP/vscode-solidity-inspector/issues"
   },
@@ -20,6 +25,7 @@
     "type": "git",
     "url": "https://github.com/PraneshASP/vscode-solidity-inspector"
   },
+  "icon": "assets/m-icon.jpg",
   "activationEvents": [
     "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
     "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer",
