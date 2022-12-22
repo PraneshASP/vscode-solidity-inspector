@@ -2,6 +2,8 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 
+const LANGID = "solidity";
+
 function getContractRootDir(currentDir) {
   while (
     !fs.existsSync(path.join(currentDir, "foundry.toml")) &&

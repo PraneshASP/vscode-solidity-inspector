@@ -7,11 +7,13 @@
 /** imports */
 const vscode = require("vscode");
 const cp = require("child_process");
-const { irOptimizerActiveFile } = require("./commands/ir-optimizer-active");
 const { newWindowBeside, getContractRootDir } = require("./helpers");
+const {
+  irOptimizerActiveFile,
+  irOptimizerContextMenu,
+} = require("./commands/ir-optimizer");
 
 /** global vars */
-const LANGID = "solidity";
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
 
 /** register commands  */
@@ -20,44 +22,15 @@ const irOptimizerActiveFileSubscription = vscode.commands.registerCommand(
   irOptimizerActiveFile
 );
 
+const irOptimizerContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.irOptimizer",
+  irOptimizerContextMenu
+);
+
 /** event funcs */
 function onActivate(context) {
   context.subscriptions.push(irOptimizerActiveFileSubscription);
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      EXTENSION_PREFIX + ".contextMenu.irOptimizer",
-      async (clickedFile, selectedFiles) => {
-        for (let index = 0; index < selectedFiles.length; index++) {
-          const activeFile = selectedFiles[index].path;
-          if (!activeFile.endsWith(".sol")) continue;
-
-          const contractPathArray = activeFile.split("/");
-          let contractName = contractPathArray[contractPathArray.length - 1];
-          contractName = contractName.substring(0, contractName.length - 4);
-
-          contractPathArray.pop();
-
-          let contractDir = await getContractRootDir(
-            contractPathArray.join("/")
-          );
-
-          cp.exec(
-            `cd ${contractDir} && forge inspect ${contractName} ir-optimized`,
-            (err, stdout, stderr) => {
-              if (err) {
-                vscode.window.showErrorMessage(
-                  `[Optimization failed] ${contractName}\n${err.message}\n\nNOTE: Please make sure to install 'forge' before using this extension`
-                );
-                console.error(err);
-              }
-              newWindowBeside(stdout);
-            }
-          );
-        }
-      }
-    )
-  );
+  context.subscriptions.push(irOptimizerContextMenuSubscription);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
