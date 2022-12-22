@@ -5,7 +5,6 @@ const { getContractRootDir, newWindowBeside } = require("../helpers");
 async function irOptimizerActiveFile(args) {
   let activeDoc = vscode.window.activeTextEditor.document;
   let activeFile = activeDoc.fileName;
-  console.log("Active file", activeFile);
   if (activeFile.endsWith(".sol")) {
     const contractPathArray = activeFile.split("/"); //activeFile.substring(0, activeFile.length - 4);
     let contractName = contractPathArray[contractPathArray.length - 1];
