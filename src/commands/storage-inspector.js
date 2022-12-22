@@ -32,4 +32,32 @@ async function storageLayoutActiveFile(args) {
   }
 }
 
-module.exports = { storageLayoutActiveFile };
+async function storageLayoutContextMenu(clickedFile, selectedFiles) {
+  for (let index = 0; index < selectedFiles.length; index++) {
+    const activeFile = selectedFiles[index].path;
+    if (!activeFile.endsWith(".sol")) continue;
+
+    const contractPathArray = activeFile.split("/");
+    let contractName = contractPathArray[contractPathArray.length - 1];
+    contractName = contractName.substring(0, contractName.length - 4);
+
+    contractPathArray.pop();
+
+    let contractDir = await getContractRootDir(contractPathArray.join("/"));
+
+    cp.exec(
+      `cd ${contractDir} && forge inspect --pretty ${contractName} storage`,
+      (err, stdout, stderr) => {
+        if (err) {
+          vscode.window.showErrorMessage(
+            `[Optimization failed] ${contractName}\n${err.message}\n\nNOTE: Please make sure to install 'forge' before using this extension`
+          );
+          console.error(err);
+        }
+        newWindowBeside(stdout);
+      }
+    );
+  }
+}
+
+module.exports = { storageLayoutActiveFile, storageLayoutContextMenu };
