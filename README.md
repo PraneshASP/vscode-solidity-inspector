@@ -1,6 +1,6 @@
 <img align="right" width="150" height="150" top="100" src="./assets/icon.jpg">
 
-# VSCode Solidity Inspector • [![license](https://img.shields.io/badge/Unlicense-blue.svg?label=license)](https://github.com/PraneshASP/vscode-solidity-inspector/blob/main/LICENSE)
+# VSCode Solidity Inspector • [![license](https://img.shields.io/badge/MIT-brown.svg?label=license)](https://github.com/PraneshASP/vscode-solidity-inspector/blob/main/LICENSE)
 
 An extension for VSCode editor to inspect the Solidity smartcontracts and generate yul/asm outputs to inspect what's happening under-the-hood. Read 0age's [tweet](https://twitter.com/z0age/status/1578443876615929857), it is the inspiration for this extension.
 
