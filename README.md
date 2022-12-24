@@ -10,16 +10,15 @@ An extension for VSCode editor to inspect the Solidity smartcontracts and genera
 
 ## Motivation:
 
-0age 👑 dropped the optimization alpha in his tweet and when I tried it out for the first time I thought it was really a cool trick. The tweet has the configuration only for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contract in the CLI, it would be handy for the buildoors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations.
+0age 👑 dropped the optimization alpha in his [tweet](https://twitter.com/z0age/status/1578443876615929857) and when I tried it out for the first time I thought it was really a cool trick. The tweet has the configuration only for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contract in the CLI, it would be handy for the buildooors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations.
 
 TL;DR, this is my first VSCode extension, so feel free to provide feedback as I know that there's a plenty of room for improvements, as always^^
 
-### Features at a glances:
+### Features at a glance:
 
-- Forge ir-optimized o/p generation for the current file.
-- Forge ir-optimized o/p generation for the multiple files option via the context menu.
-- Forge asm-optimized o/p generation for the current file.
-- Forge asm-optimized o/p generation for the multiple files option via the context menu.
+- Forge ir-optimized o/p generation for the current file (or) selected file(s).
+- Forge asm-optimized o/p generation for the current file (or) selected file(s).
+- Forge storage-layout o/p generation for the current file (or) selected file(s).
 
 ---
 
@@ -36,13 +35,13 @@ The following will need to be installed in order to use this template. Please fo
 
 The usage of this extension is straightforward. You can inspect the solidity contracts that are under the foundry project in two ways:
 
-### 1.) Select file(s) -> Right click -> `SolidityOptimizer: ir-inspect selected file(s)`
+### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: ir-inspect selected file(s)`
 
 <img src="./assets/context-menu.gif" />
 
 ---
 
-### 2.) Press `Cmd + Shift + P` -> Search `Solidity Optimizer - ir-optimizer`
+### 2.) From the command pallet: Press `Cmd + Shift + P` -> Search `Solidity Inspector - ir-optimizer`
 
 #### IR-Optimized Output:
 
@@ -53,6 +52,12 @@ The usage of this extension is straightforward. You can inspect the solidity con
 #### ASM-Optimized Output:
 
 <img src="./assets/asm-opt.gif" />
+
+---
+
+#### Storage layout Output:
+
+<img src="./assets/storage-layout.gif" />
 
 ---
 

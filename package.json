@@ -1,8 +1,8 @@
 {
   "name": "vscode-solidity-inspector",
   "displayName": "Solidity Inspector",
-  "description": "Used to inspect Solidity files and generate output in Yul/ASM",
-  "version": "0.0.2",
+  "description": "A vscode extension used to inspect Solidity files",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -13,7 +13,6 @@
     "ethereum",
     "solidity",
     "solidity-inspector",
-    "solidity-optimizer",
     "forge-inspector"
   ],
   "publisher": "PraneshASP",
@@ -40,37 +39,37 @@
       {
         "command": "vscode-solidity-inspector.activeFile.irOptimizer",
         "title": "ir-optimizer",
-        "category": "Solidity Optimizer"
+        "category": "Solidity Inspector"
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.irOptimizer",
-        "title": "SolidityOptimizer: ir-inspect selected file(s)",
-        "category": "Solidity Optimizer"
+        "title": "SolidityInspector: ir-inspect selected file(s)",
+        "category": "Solidity Inspector"
       },
       {
         "command": "vscode-solidity-inspector.activeFile.asmOptimizer",
         "title": "asm-optimizer",
-        "category": "Solidity Optimizer"
+        "category": "Solidity Inspector"
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.asmOptimizer",
-        "title": "SolidityOptimizer: asm-inspect selected file(s)",
-        "category": "Solidity Optimizer"
+        "title": "SolidityInspector: asm-inspect selected file(s)",
+        "category": "Solidity Inspector"
       },
       {
         "command": "vscode-solidity-inspector.activeFile.storageLayout",
         "title": "storage-layout",
-        "category": "Solidity Optimizer"
+        "category": "Solidity Inspector"
       },
       {
         "command": "vscode-solidity-inspector.contextMenu.storageLayout",
-        "title": "SolidityOptimizer: storage-layout for selected file(s)",
-        "category": "Solidity Optimizer"
+        "title": "SolidityInspector: storage-layout for selected file(s)",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Solidity Optimizer",
+      "title": "Solidity Inspector",
       "properties": {}
     },
     "menus": {
