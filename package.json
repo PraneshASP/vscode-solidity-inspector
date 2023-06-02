@@ -25,14 +25,6 @@
     "url": "https://github.com/PraneshASP/vscode-solidity-inspector"
   },
   "icon": "assets/m-icon.jpg",
-  "activationEvents": [
-    "onCommand:vscode-solidity-inspector.activeFile.irOptimizer",
-    "onCommand:vscode-solidity-inspector.contextMenu.irOptimizer",
-    "onCommand:vscode-solidity-inspector.activeFile.asmOptimizer",
-    "onCommand:vscode-solidity-inspector.contextMenu.asmOptimizer",
-    "onCommand:vscode-solidity-inspector.activeFile.storageLayout",
-    "onCommand:vscode-solidity-inspector.contextMenu.storageLayout"
-  ],
   "main": "./src/extension.js",
   "contributes": {
     "commands": [
@@ -65,6 +57,16 @@
         "command": "vscode-solidity-inspector.contextMenu.storageLayout",
         "title": "SolidityInspector: storage-layout for selected file(s)",
         "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.flatten",
+        "title": "flatten",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.flatten",
+        "title": "SolidityInspector: flatten selected file(s)",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
@@ -87,6 +89,11 @@
         {
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.storageLayout",
+          "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.flatten",
           "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
         }
       ]
