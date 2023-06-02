@@ -21,6 +21,11 @@ const {
   storageLayoutContextMenu,
 } = require("./commands/storage-inspector");
 
+const {
+  flattenActiveFile,
+  flattenContextMenu,
+} = require("./commands/flatten")
+
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
 
@@ -55,6 +60,16 @@ const storageLayoutContextMenuSubscription = vscode.commands.registerCommand(
   storageLayoutContextMenu
 );
 
+const flattenActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.flatten",
+  flattenActiveFile
+);
+
+const flattenContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.flatten",
+  flattenContextMenu
+);
+
 /** event funcs */
 function onActivate(context) {
   context.subscriptions.push(irOptimizerActiveFileSubscription);
@@ -65,6 +80,9 @@ function onActivate(context) {
 
   context.subscriptions.push(storageLayoutActiveFileSubscription);
   context.subscriptions.push(storageLayoutContextMenuSubscription);
+
+  context.subscriptions.push(flattenActiveFileSubscription);
+  context.subscriptions.push(flattenContextMenuSubscription);
 }
 /* exports */
 exports.activate = onActivate;
