@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 
 const decorationType = vscode.window.createTextEditorDecorationType({
-    backgroundColor: 'rgba(242, 120, 75, 0.3)'
+    backgroundColor: 'rgba(255, 0, 0, 0.3)'
 });
 function extractImports(importStatement) {
     const itemsRegex = /import\s*\{(.*?)\}\s*from.*/;
