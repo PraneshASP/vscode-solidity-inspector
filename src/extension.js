@@ -28,7 +28,7 @@ const {
 
 const {
   unusedImportsActiveFile,
-} = require("./commands/unused-imports")
+} = require("./commands/highlight-unused-imports")
 
 
 /** global vars */

@@ -1,5 +1,8 @@
 const vscode = require("vscode");
 
+const decorationType = vscode.window.createTextEditorDecorationType({
+    backgroundColor: 'rgba(242, 120, 75, 0.3)'
+});
 function extractImports(importStatement) {
     const itemsRegex = /import\s*\{(.*?)\}\s*from.*/;
     const fileRegex = /\/([^\/"]+)\.sol\";/;
@@ -29,13 +32,13 @@ function extractImports(importStatement) {
 // Highlight unused imports for the active Solidity editor when the extension is activated
 async function unusedImportsActiveFile(editor) {
     if (editor && editor.document.languageId == "solidity") {
+        editor.setDecorations(decorationType, []);
+
         const text = editor.document.getText();
         const importRegex = /import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
         const imports = text.match(importRegex) || [];
-        const decorationType = vscode.window.createTextEditorDecorationType({
-            backgroundColor: 'rgba(255, 0, 0, 0.3)'
-        });
-        console.log("Imports...", imports);
+
+
         const unusedImportDecorations = [];
 
         for (const importStatement of imports) {
