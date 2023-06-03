@@ -26,6 +26,9 @@
   },
   "icon": "assets/m-icon.jpg",
   "main": "./src/extension.js",
+  "activationEvents": [
+    "onLanguage:solidity"
+  ],
   "contributes": {
     "commands": [
       {
@@ -66,6 +69,11 @@
       {
         "command": "vscode-solidity-inspector.contextMenu.flatten",
         "title": "SolidityInspector: flatten selected file(s)",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.highlightUnusedImports",
+        "title": "SolidityInspector: highlight unused imports",
         "category": "Solidity Inspector"
       }
     ],
