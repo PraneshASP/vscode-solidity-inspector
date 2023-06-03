@@ -37,8 +37,6 @@ async function unusedImportsActiveFile(editor) {
         const text = editor.document.getText();
         const importRegex = /import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
         const imports = text.match(importRegex) || [];
-
-
         const unusedImportDecorations = [];
 
         for (const importStatement of imports) {
@@ -47,12 +45,9 @@ async function unusedImportsActiveFile(editor) {
                 const filePath = item;
                 const regex = new RegExp(item, 'g');
                 const itemOccurancesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
-                const occurrences = (text.match(new RegExp(filePath, 'g')) || []).length;
-
-
-                if (occurrences == itemOccurancesInImportStatement) {
+                const totalOccurrencesOfItem = (text.match(new RegExp(filePath, 'g')) || []).length;
+                if (totalOccurrencesOfItem == itemOccurancesInImportStatement) {
                     const lineIndex = editor.document.getText().split('\n').findIndex(line => line.includes(importStatement));
-                    // console.log("lineIndex", lineIndex);
                     const range = new vscode.Range(editor.document.lineAt(lineIndex).range.start, editor.document.lineAt(lineIndex).range.end);
 
                     unusedImportDecorations.push({ range, ...{ hoverMessage: "Unused import" } });
