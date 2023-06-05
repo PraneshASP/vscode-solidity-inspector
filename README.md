@@ -72,9 +72,8 @@ The usage of this extension is straightforward.
 
 #### Highlights unused imports:
 
-<video width="920" height="540" controls>
-  <source src="./assets/vscode-unused.mp4" type="video/mp4">
-</video>
+https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/e4906ad3-69e6-4cea-b986-7712ec342fca
+
 
 ---
 
