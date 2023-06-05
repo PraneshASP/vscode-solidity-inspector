@@ -1,4 +1,4 @@
-<img align="right" width="150" height="150" top="100" src="./assets/icon.jpg">
+<img align="right" width="150" height="150" top="100" src="./assets/m-icon.jpg">
 
 # VSCode Solidity Inspector • [![license](https://img.shields.io/badge/MIT-brown.svg?label=license)](https://github.com/PraneshASP/vscode-solidity-inspector/blob/main/LICENSE)
 
@@ -19,6 +19,8 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Forge ir-optimized o/p generation for the current file (or) selected file(s).
 - Forge asm-optimized o/p generation for the current file (or) selected file(s).
 - Forge storage-layout o/p generation for the current file (or) selected file(s).
+- Flatten current file (or) selected file(s).
+- Inline highlighting unused imports in the code editor.
 
 ---
 
@@ -33,15 +35,15 @@ The following will need to be installed in order to use this template. Please fo
 
 ## Usage
 
-The usage of this extension is straightforward. You can inspect the solidity contracts that are under the foundry project in two ways:
+The usage of this extension is straightforward.
 
-### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: ir-inspect selected file(s)`
+### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: <ACTION>`
 
 <img src="./assets/context-menu.gif" />
 
 ---
 
-### 2.) From the command pallet: Press `Cmd + Shift + P` -> Search `Solidity Inspector - ir-optimizer`
+### 2.) From the command pallet: Press `Cmd + Shift + P` -> Search `Solidity Inspector - <ACTION>`
 
 #### IR-Optimized Output:
 
@@ -58,6 +60,21 @@ The usage of this extension is straightforward. You can inspect the solidity con
 #### Storage layout Output:
 
 <img src="./assets/storage-layout.gif" />
+
+---
+
+#### Flatten contract Output:
+
+<img src="./assets/flatten.gif" />
+
+
+---
+
+#### Highlights unused imports:
+
+<video width="920" height="840" controls>
+  <source src="./assets/vscode-unused.mkv" type="video/mkv">
+</video>
 
 ---
 
