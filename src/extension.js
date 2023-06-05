@@ -21,6 +21,16 @@ const {
   storageLayoutContextMenu,
 } = require("./commands/storage-inspector");
 
+const {
+  flattenActiveFile,
+  flattenContextMenu,
+} = require("./commands/flatten")
+
+const {
+  unusedImportsActiveFile,
+} = require("./commands/highlight-unused-imports")
+
+
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
 
@@ -55,8 +65,38 @@ const storageLayoutContextMenuSubscription = vscode.commands.registerCommand(
   storageLayoutContextMenu
 );
 
+const flattenActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.flatten",
+  flattenActiveFile
+);
+
+const flattenContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.flatten",
+  flattenContextMenu
+);
+
+const highlightUnusedImportsActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.highlightUnusedImports",
+  unusedImportsActiveFile
+);
+
+
 /** event funcs */
 function onActivate(context) {
+  vscode.window.onDidChangeActiveTextEditor(editor => {
+    activeEditor = editor;
+    if (editor) {
+      unusedImportsActiveFile(editor);
+    }
+  });
+
+  vscode.workspace.onDidSaveTextDocument(() => {
+    vscode.window.visibleTextEditors.map(editor => {
+      if (editor && editor.document && editor.document.languageId == "solidity") {
+        unusedImportsActiveFile(editor);
+      }
+    });
+  });
   context.subscriptions.push(irOptimizerActiveFileSubscription);
   context.subscriptions.push(irOptimizerContextMenuSubscription);
 
@@ -65,6 +105,17 @@ function onActivate(context) {
 
   context.subscriptions.push(storageLayoutActiveFileSubscription);
   context.subscriptions.push(storageLayoutContextMenuSubscription);
+
+  context.subscriptions.push(flattenActiveFileSubscription);
+  context.subscriptions.push(flattenContextMenuSubscription);
+
+  context.subscriptions.push(highlightUnusedImportsActiveFileSubscription);
+
+  vscode.window.visibleTextEditors.map(editor => {
+    if (editor && editor.document && editor.document.languageId == "solidity") {
+      unusedImportsActiveFile(editor);
+    }
+  });
 }
 /* exports */
 exports.activate = onActivate;
