@@ -20,7 +20,7 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Forge asm-optimized o/p generation for the current file (or) selected file(s).
 - Forge storage-layout o/p generation for the current file (or) selected file(s).
 - Flatten current file (or) selected file(s).
-- Inline highlighting unused imports in the code editor.
+- Inline highlighting in code editor for unused imports.
 
 ---
 
@@ -39,7 +39,7 @@ The usage of this extension is straightforward.
 
 ### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: <ACTION>`
 
-<img src="./assets/context-menu.gif"  width="920" height="540"/>
+<img src="./assets/context-menu.gif"/>
 
 ---
 
@@ -47,25 +47,25 @@ The usage of this extension is straightforward.
 
 #### IR-Optimized Output:
 
-<img  src="./assets/ir-opt.gif"  width="920" height="540"/>
+<img  src="./assets/ir-opt.gif"/>
 
 ---
 
 #### ASM-Optimized Output:
 
-<img src="./assets/asm-opt.gif" width="920" height="540"/>
+<img src="./assets/asm-opt.gif"/>
 
 ---
 
 #### Storage layout Output:
 
-<img src="./assets/storage-layout.gif"  width="920" height="540"/>
+<img src="./assets/storage-layout.gif"/>
 
 ---
 
 #### Flatten contract Output:
 
-<img src="./assets/flatten.gif"  width="920" height="540"/>
+<img src="./assets/flatten.gif"/>
 
 
 ---
