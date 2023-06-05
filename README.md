@@ -39,7 +39,7 @@ The usage of this extension is straightforward.
 
 ### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: <ACTION>`
 
-<img src="./assets/context-menu.gif" />
+<img src="./assets/context-menu.gif"  width="920" height="540"/>
 
 ---
 
@@ -47,33 +47,33 @@ The usage of this extension is straightforward.
 
 #### IR-Optimized Output:
 
-<img  src="./assets/ir-opt.gif" />
+<img  src="./assets/ir-opt.gif"  width="920" height="540"/>
 
 ---
 
 #### ASM-Optimized Output:
 
-<img src="./assets/asm-opt.gif" />
+<img src="./assets/asm-opt.gif" width="920" height="540"/>
 
 ---
 
 #### Storage layout Output:
 
-<img src="./assets/storage-layout.gif" />
+<img src="./assets/storage-layout.gif"  width="920" height="540"/>
 
 ---
 
 #### Flatten contract Output:
 
-<img src="./assets/flatten.gif" />
+<img src="./assets/flatten.gif"  width="920" height="540"/>
 
 
 ---
 
 #### Highlights unused imports:
 
-<video width="920" height="840" controls>
-  <source src="./assets/vscode-unused.mkv" type="video/mkv">
+<video width="920" height="540" controls>
+  <source src="./assets/vscode-unused.mp4" type="video/mp4">
 </video>
 
 ---
