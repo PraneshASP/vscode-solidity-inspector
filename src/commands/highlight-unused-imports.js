@@ -42,10 +42,9 @@ async function unusedImportsActiveFile(editor) {
         for (const importStatement of imports) {
             const imports = extractImports(importStatement);
             for (const item of imports) {
-                const filePath = item;
                 const regex = new RegExp(item, 'g');
                 const itemOccurancesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
-                const totalOccurrencesOfItem = (text.match(new RegExp(filePath, 'g')) || []).length;
+                const totalOccurrencesOfItem = (text.match(new RegExp(`\\b${item}\\b`, 'gi')) || []).length;
                 if (totalOccurrencesOfItem == itemOccurancesInImportStatement) {
                     const lineIndex = editor.document.getText().split('\n').findIndex(line => line.includes(importStatement));
                     const range = new vscode.Range(editor.document.lineAt(lineIndex).range.start, editor.document.lineAt(lineIndex).range.end);
