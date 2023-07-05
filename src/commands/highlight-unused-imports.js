@@ -4,18 +4,21 @@ const decorationType = vscode.window.createTextEditorDecorationType({
     backgroundColor: 'rgba(255, 0, 0, 0.3)'
 });
 function extractImports(importStatement) {
-    const itemsRegex = /import\s*\{(.*?)\}\s*from.*/;
-    const fileRegex = /\/([^\/"]+)\.sol\";/;
+    const itemsRegex = /import\s*\{(.*?)\}\s*from.*/g;
+    const fileRegex = /import\s*['"]([^'"]+)['"];/g;
 
-    const itemsMatch = importStatement.match(itemsRegex);
+    const itemsMatch = itemsRegex.exec(importStatement);
     if (itemsMatch) {
         // This was an import with named items.
         // Split the match into individual items, removing leading/trailing whitespace.
-        const items = itemsMatch[1].split(',').map(item => item.trim());
+        const items = itemsMatch[1].split(',').map(item => {
+            const parts = item.trim().split(/\s+as\s+/);
+            return parts.length === 2 ? parts[1] : parts[0];
+        });
         return items;
     } else {
         // This was an import with a file.
-        const fileMatch = importStatement.match(fileRegex);
+        const fileMatch = fileRegex.exec(importStatement);
         if (fileMatch) {
             // Extract the contract/file name from the path.
             const filePathParts = fileMatch[1].split('/');
@@ -43,9 +46,9 @@ async function unusedImportsActiveFile(editor) {
             const imports = extractImports(importStatement);
             for (const item of imports) {
                 const regex = new RegExp(item, 'g');
-                const itemOccurancesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
+                const itemOccurrencesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
                 const totalOccurrencesOfItem = (text.match(new RegExp(`\\b${item}\\b`, 'gi')) || []).length;
-                if (totalOccurrencesOfItem == itemOccurancesInImportStatement) {
+                if (totalOccurrencesOfItem == itemOccurrencesInImportStatement) {
                     const lineIndex = editor.document.getText().split('\n').findIndex(line => line.includes(importStatement));
                     const range = new vscode.Range(editor.document.lineAt(lineIndex).range.start, editor.document.lineAt(lineIndex).range.end);
 
