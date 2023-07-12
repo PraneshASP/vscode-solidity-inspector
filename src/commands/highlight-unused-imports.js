@@ -38,6 +38,10 @@ async function unusedImportsActiveFile(editor) {
         editor.setDecorations(decorationType, []);
 
         const text = editor.document.getText();
+
+        const solhintRuleString = "solhint-disable no-unused-import"
+        if (text.includes(solhintRuleString)) return;
+
         const importRegex = /import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
         const imports = text.match(importRegex) || [];
         const unusedImportDecorations = [];
