@@ -21,6 +21,7 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Forge storage-layout o/p generation for the current file (or) selected file(s).
 - Flatten current file (or) selected file(s).
 - Inline highlighting in code editor for unused imports.
+- Generate and view Foundry deployment report in a clean and concise table format. 
 
 ---
 
