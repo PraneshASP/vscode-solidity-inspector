@@ -2,7 +2,7 @@
   "name": "vscode-solidity-inspector",
   "displayName": "Solidity Inspector",
   "description": "A vscode extension used to inspect Solidity files",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -27,7 +27,8 @@
   "icon": "assets/m-icon.jpg",
   "main": "./src/extension.js",
   "activationEvents": [
-    "onLanguage:solidity"
+    "onLanguage:solidity",
+    "onLanguage:json"
   ],
   "contributes": {
     "commands": [
@@ -75,6 +76,16 @@
         "command": "vscode-solidity-inspector.activeFile.highlightUnusedImports",
         "title": "SolidityInspector: highlight unused imports",
         "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.generateDeploymentReport",
+        "title": "Generate deployment report",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
+        "title": "SolidityInspector: generate deployment report",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
@@ -103,21 +114,28 @@
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.flatten",
           "when": "resourceLangId == solidity && resourceFilename =~ /\\.sol/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
+          "when": "resourceFilename =~ /\\.json/"
         }
       ]
     }
   },
   "scripts": {},
   "devDependencies": {
-    "@types/vscode": "^1.72.0",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.0",
     "@types/node": "16.x",
+    "@types/vscode": "^1.72.0",
+    "@vscode/test-electron": "^2.1.5",
     "eslint": "^8.24.0",
     "glob": "^8.0.3",
     "mocha": "^10.0.0",
-    "typescript": "^4.8.4",
-    "@vscode/test-electron": "^2.1.5"
+    "typescript": "^4.8.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "cli-table3": "^0.6.3"
+  }
 }
