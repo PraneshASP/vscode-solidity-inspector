@@ -30,6 +30,10 @@ const {
   unusedImportsActiveFile,
 } = require("./commands/highlight-unused-imports")
 
+const {
+  generateDeploymentReportActiveFile, generateDeploymentReportContextMenu
+} = require("./commands/deployment-report")
+
 
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
@@ -80,6 +84,15 @@ const highlightUnusedImportsActiveFileSubscription = vscode.commands.registerCom
   unusedImportsActiveFile
 );
 
+const generateDeploymentReportActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.generateDeploymentReport",
+  generateDeploymentReportActiveFile
+);
+
+const generateDeploymentReportContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.generateDeploymentReport",
+  generateDeploymentReportContextMenu
+);
 
 /** event funcs */
 function onActivate(context) {
@@ -110,6 +123,11 @@ function onActivate(context) {
   context.subscriptions.push(flattenContextMenuSubscription);
 
   context.subscriptions.push(highlightUnusedImportsActiveFileSubscription);
+
+  context.subscriptions.push(generateDeploymentReportActiveFileSubscription);
+  context.subscriptions.push(generateDeploymentReportContextMenuSubscription);
+
+
 
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
