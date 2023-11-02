@@ -32,7 +32,9 @@ const {
 
 const {
   generateDeploymentReportActiveFile, generateDeploymentReportContextMenu
-} = require("./commands/deployment-report")
+} = require("./commands/deployment-report");
+
+const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("./commands/parse-tree");
 
 
 /** global vars */
@@ -127,7 +129,9 @@ function onActivate(context) {
   context.subscriptions.push(generateDeploymentReportActiveFileSubscription);
   context.subscriptions.push(generateDeploymentReportContextMenuSubscription);
 
-
+  // Register the Code Action provider and diagnostic collection to the subscriptions
+  context.subscriptions.push(treeFilesCodeActionProvider);
+  context.subscriptions.push(treeFilesDiagnosticCollection);
 
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
