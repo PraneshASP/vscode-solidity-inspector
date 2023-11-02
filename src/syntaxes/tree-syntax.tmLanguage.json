@@ -15,6 +15,11 @@
         {
             "match": "\\b(when|it|given)\\b",
             "name": "keyword.when-it-given"
+        },
+        {
+            "begin": "//",
+            "end": "$",
+            "name": "comment"
         }
     ],
     "repository": {
