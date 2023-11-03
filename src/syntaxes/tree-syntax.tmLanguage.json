@@ -1,0 +1,35 @@
+{
+    "name": "Tree File",
+    "scopeName": "source.tree",
+    "fileTypes": [
+        ".tree"
+    ],
+    "patterns": [
+        {
+            "include": "#tree-characters"
+        },
+        {
+            "match": "\\b[a-zA-Z0-9_.-]+\\.t\\.sol\\b",
+            "name": "constant.filename"
+        },
+        {
+            "match": "\\b(when|it|given)\\b",
+            "name": "keyword.when-it-given"
+        },
+        {
+            "begin": "//",
+            "end": "$",
+            "name": "comment"
+        }
+    ],
+    "repository": {
+        "tree-characters": {
+            "patterns": [
+                {
+                    "match": "(├──|└──|│)",
+                    "name": "string.tree-characters"
+                }
+            ]
+        }
+    }
+}
