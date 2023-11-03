@@ -85,14 +85,13 @@ https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/e4906ad3
 
 #### Generate foundry deployment report:
 
-<video src='./assets/deployment-report-demo.mov'/>
-
+https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/cfaf987e-ad91-4927-9042-7562bc8684dc
 
 ---
 
 #### Support for `.tree` files and test stub generation: 
 
-<video src='./assets/scaffold-demo.mov'/>
+https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b-bc80-46cc-88c9-7e4faa0bb043
 
 
 ---
