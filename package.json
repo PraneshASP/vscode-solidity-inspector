@@ -2,7 +2,7 @@
   "name": "vscode-solidity-inspector",
   "displayName": "Solidity Inspector",
   "description": "A vscode extension used to inspect Solidity files",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "engines": {
     "vscode": "^1.72.0"
   },
