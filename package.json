@@ -87,6 +87,16 @@
         "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
         "title": "SolidityInspector: generate deployment report",
         "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.scaffold",
+        "title": "Scaffold",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.scaffold",
+        "title": "Solidity Inspector: scaffold",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
@@ -120,6 +130,11 @@
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
           "when": "resourceFilename =~ /\\.json/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.scaffold",
+          "when": "resourceFilename =~ /\\.tree/"
         }
       ]
     },
