@@ -38,40 +38,16 @@ The following will need to be installed in order to use this template. Please fo
 
 - [Bulloak](https://github.com/alexfertel/bulloak)
   - This is required to generate test stub from `.tree` spec files.
+ 
+ ---
 
 ## Usage
 
 The usage of this extension is straightforward.
 
-### 1.) From the context menu: Select file(s) -> Right click -> `SolidityInspector: <ACTION>`
+- From the context menu: Select file(s) -> Right click -> `SolidityInspector: <ACTION>`
+- From the command pallet: Press `Cmd + Shift + P` -> Search `Solidity Inspector - <ACTION>`
 
-<img src="./assets/context-menu.gif"/>
-
----
-
-### 2.) From the command pallet: Press `Cmd + Shift + P` -> Search `Solidity Inspector - <ACTION>`
-
-#### IR-Optimized Output:
-
-<img  src="./assets/ir-opt.gif"/>
-
----
-
-#### ASM-Optimized Output:
-
-<img src="./assets/asm-opt.gif"/>
-
----
-
-#### Storage layout Output:
-
-<img src="./assets/storage-layout.gif"/>
-
----
-
-#### Flatten contract Output:
-
-<img src="./assets/flatten.gif"/>
 
 
 ---
@@ -95,6 +71,8 @@ https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b
 
 
 ---
+
+> For more demos, see [./assets](https://github.com/PraneshASP/vscode-solidity-inspector/tree/main/assets)
 
 <!-- CONTRIBUTING -->
 
