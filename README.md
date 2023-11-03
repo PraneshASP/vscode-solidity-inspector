@@ -22,6 +22,8 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Flatten current file (or) selected file(s).
 - Inline highlighting in code editor for unused imports.
 - Generate and view Foundry deployment report in a clean and concise table format. 
+- Syntax highlighting of for `.tree` files.
+- Generate foundry test stub using [bulloak](https://github.com/alexfertel/bulloak)'s `scaffold` command. 
 
 ---
 
@@ -33,6 +35,9 @@ The following will need to be installed in order to use this template. Please fo
   - This will install `forge`, `cast`, and `anvil`
   - You can test you've installed them right by running `forge --version` and get an output like: `forge 0.2.0 (f016135 2022-07-04T00:15:02.930499Z)`
   - To get the latest of each, just run `foundryup`
+
+- [Bulloak](https://github.com/alexfertel/bulloak)
+  - This is required to generate test stub from `.tree` spec files.
 
 ## Usage
 
@@ -74,6 +79,19 @@ The usage of this extension is straightforward.
 #### Highlights unused imports:
 
 https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/e4906ad3-69e6-4cea-b986-7712ec342fca
+
+
+---
+
+#### Generate foundry deployment report:
+
+https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/cfaf987e-ad91-4927-9042-7562bc8684dc
+
+---
+
+#### Support for `.tree` files and test stub generation: 
+
+https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b-bc80-46cc-88c9-7e4faa0bb043
 
 
 ---
