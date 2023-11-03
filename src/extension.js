@@ -32,8 +32,12 @@ const {
 
 const {
   generateDeploymentReportActiveFile, generateDeploymentReportContextMenu
-} = require("./commands/deployment-report")
+} = require("./commands/deployment-report");
 
+const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("./commands/parse-tree");
+
+
+const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
 
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
@@ -94,6 +98,16 @@ const generateDeploymentReportContextMenuSubscription = vscode.commands.register
   generateDeploymentReportContextMenu
 );
 
+const scaffoldActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.scaffold",
+  scaffoldActiveFile
+);
+
+const scaffoldContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.scaffold",
+  scaffoldContextMenu
+);
+
 /** event funcs */
 function onActivate(context) {
   vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -127,7 +141,12 @@ function onActivate(context) {
   context.subscriptions.push(generateDeploymentReportActiveFileSubscription);
   context.subscriptions.push(generateDeploymentReportContextMenuSubscription);
 
+  // Register the Code Action provider and diagnostic collection to the subscriptions
+  context.subscriptions.push(treeFilesCodeActionProvider);
+  context.subscriptions.push(treeFilesDiagnosticCollection);
 
+  context.subscriptions.push(scaffoldActiveFileSubscription);
+  context.subscriptions.push(scaffoldContextMenuSubscription);
 
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {

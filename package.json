@@ -2,7 +2,7 @@
   "name": "vscode-solidity-inspector",
   "displayName": "Solidity Inspector",
   "description": "A vscode extension used to inspect Solidity files",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -28,7 +28,8 @@
   "main": "./src/extension.js",
   "activationEvents": [
     "onLanguage:solidity",
-    "onLanguage:json"
+    "onLanguage:json",
+    "onLanguage:tree"
   ],
   "contributes": {
     "commands": [
@@ -86,6 +87,16 @@
         "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
         "title": "SolidityInspector: generate deployment report",
         "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.scaffold",
+        "title": "Scaffold",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.scaffold",
+        "title": "Solidity Inspector: scaffold",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
@@ -119,9 +130,29 @@
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.generateDeploymentReport",
           "when": "resourceFilename =~ /\\.json/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.scaffold",
+          "when": "resourceFilename =~ /\\.tree/"
         }
       ]
-    }
+    },
+    "grammars": [
+      {
+        "language": "tree",
+        "scopeName": "source.tree",
+        "path": "./src/syntaxes/tree-syntax.tmLanguage.json"
+      }
+    ],
+    "languages": [
+      {
+        "id": "tree",
+        "extensions": [
+          ".tree"
+        ]
+      }
+    ]
   },
   "scripts": {},
   "devDependencies": {
