@@ -43,13 +43,13 @@ async function unusedImportsActiveFile(editor) {
         if (text.includes(solhintRuleString)) return;
 
         const importRegex = /import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
-        const imports = text.match(importRegex) || [];
+        const importStatements = text.match(importRegex) || [];
         const unusedImportDecorations = [];
 
-        for (const importStatement of imports) {
+        for (const importStatement of importStatements) {
             const imports = extractImports(importStatement);
             for (const item of imports) {
-                const regex = new RegExp(item, 'g');
+                const regex = new RegExp(`\\b${item}\\b`, 'g');
                 const itemOccurrencesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
                 const totalOccurrencesOfItem = (text.match(new RegExp(`\\b${item}\\b`, 'gi')) || []).length;
                 if (totalOccurrencesOfItem == itemOccurrencesInImportStatement) {
