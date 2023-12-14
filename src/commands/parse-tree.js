@@ -10,15 +10,6 @@ const treeFilesCodeActionProvider = vscode.languages.registerCodeActionsProvider
 
         document.getText().split('\n').forEach((lineText, lineNumber) => {
             lineText = lineText.trim();
-            if (lineNumber == 0 && !lineText.endsWith('.t.sol')) {
-                const diagnostic = new vscode.Diagnostic(
-                    new vscode.Range(0, 0, 0, lineText.length),
-                    `Should be a valid test name (ending with .t.sol)`,
-                    vscode.DiagnosticSeverity.Error
-                );
-
-                diagnostics.push(diagnostic);
-            }
             if (/^(├──|└──|│)/.test(lineText)) {
                 const allowedPrefixes = ['it', 'when', 'given'];
                 lineText = lineText.replace(/^[^a-zA-Z0-9]+/, '');
