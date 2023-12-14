@@ -42,14 +42,16 @@ async function unusedImportsActiveFile(editor) {
         const solhintRuleString = "solhint-disable no-unused-import"
         if (text.includes(solhintRuleString)) return;
 
-        const importRegex = /import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
-        const imports = text.match(importRegex) || [];
+        const importRegex = /(?<!\/\/\/?).*import\s+((?:\{.+?\}\s+from\s+)?(?:\".*?\"|'.*?'));/g;
+        const importStatements = text.match(importRegex) || [];
         const unusedImportDecorations = [];
+        for (const importStatement of importStatements) {
+            // skip commented out import statements
+            if (importStatement.startsWith("//") || importStatement.startsWith("/*")) return;
 
-        for (const importStatement of imports) {
             const imports = extractImports(importStatement);
             for (const item of imports) {
-                const regex = new RegExp(item, 'g');
+                const regex = new RegExp(`\\b${item}\\b`, 'g');
                 const itemOccurrencesInImportStatement = (importStatement.replace(/\.sol\b/g, '').match(regex) || []).length;
                 const totalOccurrencesOfItem = (text.match(new RegExp(`\\b${item}\\b`, 'gi')) || []).length;
                 if (totalOccurrencesOfItem == itemOccurrencesInImportStatement) {
