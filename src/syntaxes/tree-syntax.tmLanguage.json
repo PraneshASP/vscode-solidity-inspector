@@ -9,7 +9,7 @@
             "include": "#tree-characters"
         },
         {
-            "match": "\\b[a-zA-Z0-9_.-]+\\.t\\.sol\\b",
+            "match": "\\b[a-zA-Z0-9_.-]*?(Test[a-zA-Z0-9_.-]*|\\.t\\.sol)\\b",
             "name": "constant.filename"
         },
         {
