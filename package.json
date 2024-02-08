@@ -30,7 +30,7 @@
     "onLanguage:solidity",
     "onLanguage:json",
     "onLanguage:tree"
-  ],
+    ],
   "contributes": {
     "commands": [
       {
@@ -104,6 +104,14 @@
       "title": "Solidity Inspector",
       "properties": {}
     },
+    "keybindings":[
+      {
+        "command": "vscode-solidity-inspector.pathIntel",
+        "key": "ctrl+alt+x",
+        "mac": "cmd+alt+x",
+        "when": "editorTextFocus"
+    }
+    ],
     "menus": {
       "explorer/context": [
         {

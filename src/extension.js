@@ -39,6 +39,9 @@ const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
 
+const { pathIntel } = require("./commands/path-intel");
+
+
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
 
@@ -148,11 +151,18 @@ function onActivate(context) {
   context.subscriptions.push(scaffoldActiveFileSubscription);
   context.subscriptions.push(scaffoldContextMenuSubscription);
 
+  pathIntel(context);
+
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
       unusedImportsActiveFile(editor);
     }
   });
+
+  // const provider = new SolidityImportCompletionItemProvider();
+  // const selector = { language: 'solidity', scheme: 'file' };
+  // const triggerCharacters = ['"', "'", "{"];
+  // context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, provider, ...triggerCharacters));
 }
 /* exports */
 exports.activate = onActivate;
