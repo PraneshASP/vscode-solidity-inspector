@@ -158,11 +158,7 @@ function onActivate(context) {
       unusedImportsActiveFile(editor);
     }
   });
-
-  // const provider = new SolidityImportCompletionItemProvider();
-  // const selector = { language: 'solidity', scheme: 'file' };
-  // const triggerCharacters = ['"', "'", "{"];
-  // context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, provider, ...triggerCharacters));
+ 
 }
 /* exports */
 exports.activate = onActivate;
