@@ -6,6 +6,8 @@
 
 /** imports */
 const vscode = require("vscode");
+const path = require("path");
+const fs = require("fs");
 
 const {
   irOptimizerActiveFile,
@@ -39,7 +41,7 @@ const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
 
-const { pathIntel } = require("./commands/path-intel");
+const { findSolidityFiles } = require("./helpers");
 
 
 /** global vars */
@@ -151,14 +153,78 @@ function onActivate(context) {
   context.subscriptions.push(scaffoldActiveFileSubscription);
   context.subscriptions.push(scaffoldContextMenuSubscription);
 
-  pathIntel(context);
+
+
+  async function provideCompletionItems(document, position) {
+    const linePrefix = document.lineAt(position).text.substring(0, position.character);
+    if (!linePrefix.startsWith('import')) {
+      return undefined;
+    }
+
+    // Step 1: Read and parse remappings
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders) return undefined; // No workspace folder open
+
+    const rootPath = workspaceFolders[0].uri.fsPath;
+    const remappingsPath = path.join(rootPath, 'remappings.txt');
+    let remappings = {};
+
+    if (fs.existsSync(remappingsPath)) {
+      const remappingsContent = fs.readFileSync(remappingsPath, 'utf8');
+      remappingsContent.split('\n').forEach(line => {
+        const [key, val] = line.split('=');
+        remappings[key.trim()] = val.trim();
+      });
+    }
+
+    // Step 2: Apply remappings to import paths
+    const solidityFiles = await findSolidityFiles();
+    const currentFilePath = document.uri.fsPath;
+    const currentDir = path.dirname(currentFilePath);
+
+
+    const completionItems = solidityFiles.map(file => {
+      let filePath = vscode.workspace.asRelativePath(file, false);
+      let remappedPath = filePath; // Start with the original path
+
+      // Apply remappings
+      Object.entries(remappings).forEach(([key, value]) => {
+        if (filePath.startsWith(value)) {
+          // Replace the matching part of the path with the remapping key
+          remappedPath = filePath.replace(value, key);
+        }
+      });
+
+      // Determine if the path was remapped
+      const isRemapped = remappedPath !== filePath;
+
+      // Use the remapped path if available, otherwise use the relative path
+      const finalPath = isRemapped ? remappedPath : `./${path.relative(currentDir, file).split(path.sep).join('/')}`;
+
+      const contractName = path.basename(file, '.sol');
+      const completionItem = new vscode.CompletionItem(`${contractName} from "${finalPath}"`, vscode.CompletionItemKind.File);
+
+      // Format the insert text based on whether the path was remapped
+      completionItem.insertText = `{${contractName}} from "${finalPath}";`;
+
+      return completionItem;
+    });
+
+
+    return completionItems;
+  }
+
+  context.subscriptions.push(vscode.languages.registerCompletionItemProvider('solidity', { provideCompletionItems }, ['"', "{"]));
+
 
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
       unusedImportsActiveFile(editor);
     }
   });
- 
+
 }
+
+
 /* exports */
 exports.activate = onActivate;
