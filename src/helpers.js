@@ -101,7 +101,7 @@ function findSolidityFiles() {
   // Define the glob pattern for Solidity files
   const solidityFilePattern = '**/*.sol';
   // Exclude files from the node_modules and out dirs 
-  const excludePattern = '{**/node_modules/**,**/out/**}';
+  const excludePattern = '{**/node_modules/**,**/out/**,**/test}';
 
   // Use findFiles to search for files matching the Solidity pattern, excluding undesired paths
   return vscode.workspace.findFiles(solidityFilePattern, excludePattern)
