@@ -56,19 +56,6 @@ async function provideCompletionItems(document, position) {
 
   const rootPath = workspaceFolders[0].uri.fsPath;
 
-
-  const remappingsPath = path.join(rootPath, 'remappings.txt');
-  let remappings = {};
-
-  if (fs.existsSync(remappingsPath)) {
-    const remappingsContent = fs.readFileSync(remappingsPath, 'utf8');
-    remappingsContent.split('\n').forEach(line => {
-      const [key, val] = line.split('=');
-      remappings[key.trim()] = val.trim();
-    });
-  }
-
-
   if (remappings === null) { // Load remappings if not already loaded
     remappings = await loadRemappings(rootPath);
   }
@@ -121,6 +108,13 @@ function findSolidityFiles() {
     .then(files => files.map(file => file.fsPath)); // Convert URIs to file system paths
 
 }
+
+function resetRemappings() {
+  remappings = null;
+}
+
+
+
 
 const networkMap = {
   "1": "Ethereum",
@@ -220,11 +214,4 @@ const networkMap = {
 
 
 
-module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap, provideCompletionItems, findSolidityFiles };
-
-// Execution time for optimized: 22.145625114440918 milliseconds
-//  Execution time for optimized: 11.452915668487549 milliseconds
-//  Execution time for optimized: 8.146999835968018 milliseconds
-//  Execution time for optimized: 14.010457992553711 milliseconds
-//  Execution time for optimized: 8.457749843597412 milliseconds
-//  Execution time for optimized: 12.96274995803833 milliseconds
+module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap, provideCompletionItems, resetRemappings };

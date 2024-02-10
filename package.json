@@ -106,7 +106,7 @@
     },
     "keybindings": [
       {
-        "command": "vscode-solidity-inspector.pathIntel",
+        "command": "vscode-solidity-inspector.resetRemappings",
         "key": "ctrl+alt+x",
         "mac": "cmd+alt+x",
         "when": "editorTextFocus"
