@@ -25,9 +25,8 @@ function newWindowBeside(content) {
 }
 
 
-async function provideImportSuggestions(document, position) {
+async function provideCompletionItems(document, position) {
   const linePrefix = document.lineAt(position).text.substring(0, position.character);
-  console.log("lineprefix", linePrefix);
   if (!linePrefix.startsWith('import')) {
     return undefined;
   }
@@ -80,8 +79,6 @@ async function provideImportSuggestions(document, position) {
 
     return completionItem;
   });
-
-
   return completionItems;
 }
 
@@ -195,4 +192,4 @@ const networkMap = {
 
 
 
-module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap, provideImportSuggestions, findSolidityFiles };
+module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap, provideCompletionItems, findSolidityFiles };
