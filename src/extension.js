@@ -7,6 +7,7 @@
 /** imports */
 const vscode = require("vscode");
 
+
 const {
   irOptimizerActiveFile,
   irOptimizerContextMenu,
@@ -38,6 +39,9 @@ const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("
 
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
+
+const { provideCompletionItems, resetRemappings } = require("./helpers");
+
 
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
@@ -148,11 +152,22 @@ function onActivate(context) {
   context.subscriptions.push(scaffoldActiveFileSubscription);
   context.subscriptions.push(scaffoldContextMenuSubscription);
 
+
+  // Import suggestions. 
+  context.subscriptions.push(vscode.languages.registerCompletionItemProvider('solidity', { provideCompletionItems }, ['"', "{"]));
+  context.subscriptions.push(vscode.commands.registerCommand(EXTENSION_PREFIX + '.resetRemappings', () => {
+    resetRemappings();
+    vscode.window.showInformationMessage('Remappings have been refreshed!');
+  }));
+
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
       unusedImportsActiveFile(editor);
     }
   });
+
 }
+
+
 /* exports */
 exports.activate = onActivate;
