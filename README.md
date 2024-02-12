@@ -2,15 +2,15 @@
 
 # VSCode Solidity Inspector • [![license](https://img.shields.io/badge/MIT-brown.svg?label=license)](https://github.com/PraneshASP/vscode-solidity-inspector/blob/main/LICENSE)
 
-An extension for VSCode editor to inspect the Solidity smartcontracts and generate yul/asm outputs to inspect what's happening under-the-hood. Read 0age's [tweet](https://twitter.com/z0age/status/1578443876615929857), it is the inspiration for this extension.
+An extension for VSCode editor that offers multiple utilities to work with the Solidity smart-contracts.
 
-> Note: This extension is not tested across multiple platforms yet.Only the contracts under foundry project are supported for now.
+> Note: This extension is not tested across multiple platforms yet. Only the contracts under foundry project are supported for now.
 
 ---
 
 ## Motivation:
 
-0age 👑 dropped the optimization alpha in his [tweet](https://twitter.com/z0age/status/1578443876615929857) and when I tried it out for the first time I thought it was really a cool trick. The tweet has the configuration only for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contract in the CLI, it would be handy for the buildooors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations.
+0age 👑 dropped the optimization alpha in his [tweet](https://twitter.com/z0age/status/1578443876615929857) and when I tried it out for the first time I thought it was really a cool trick. The tweet has the configuration only for hardhat projects. But forge helps to do the same thing in a single command. So I thought instead of typing out the command for each contract in the CLI, it would be handy for the buildooors if there's an extension to inspect solidity contracts and generate low-level code for the contracts. The o/p generated is very useful for gas optimizations. Later I started adding more features to this extension. 
 
 TL;DR, this is my first VSCode extension, so feel free to provide feedback as I know that there's a plenty of room for improvements, as always^^
 
@@ -24,6 +24,7 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Generate and view Foundry deployment report in a clean and concise table format. 
 - Syntax highlighting of for `.tree` files.
 - Generate foundry test stub using [bulloak](https://github.com/alexfertel/bulloak)'s `scaffold` command. 
+- Auto-complete path suggestions for importing files and dependencies (with forge remappings support). 
 
 ---
 
@@ -68,6 +69,15 @@ https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/cfaf987e
 #### Support for `.tree` files and test stub generation: 
 
 https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b-bc80-46cc-88c9-7e4faa0bb043
+
+---
+
+#### File import auto-complete suggestions (with forge remappings support):
+
+> [!TIP] 
+> If you have updated your remappings.txt file, you can press `CMD+CTRL+X` to refresh remappings.  
+
+![](./assets/auto-import.gif)
 
 
 ---
