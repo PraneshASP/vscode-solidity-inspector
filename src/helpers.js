@@ -24,98 +24,6 @@ function newWindowBeside(content) {
     );
 }
 
-let remappings = null; // Cache remappings globally 
-
-async function loadRemappings(rootPath) {
-  const remappingsPath = path.join(rootPath, 'remappings.txt');
-  try {
-    const remappingsContent = await vscode.workspace.fs.readFile(vscode.Uri.file(remappingsPath));
-    return remappingsContent.toString().split('\n').reduce((acc, line) => {
-      const [key, val] = line.split('=');
-      if (key && val) {
-        acc[key.trim()] = val.trim();
-      }
-      return acc;
-    }, {});
-  } catch (error) {
-    console.error('Error reading remappings:', error);
-    return {};
-  }
-}
-
-
-async function provideCompletionItems(document, position) {
-  const linePrefix = document.lineAt(position).text.substring(0, position.character);
-  if (!linePrefix.startsWith('import')) {
-    return undefined;
-  }
-
-  // Step 1: Read and parse remappings
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders) return undefined; // No workspace folder open
-
-  const rootPath = workspaceFolders[0].uri.fsPath;
-
-  if (remappings === null) { // Load remappings if not already loaded
-    remappings = await loadRemappings(rootPath);
-  }
-
-  // Step 2: Apply remappings to import paths
-  const solidityFiles = await findSolidityFiles();
-  const currentFilePath = document.uri.fsPath;
-  const currentDir = path.dirname(currentFilePath);
-
-
-  const completionItems = solidityFiles.map(file => {
-    let filePath = vscode.workspace.asRelativePath(file, false);
-    let remappedPath = filePath; // Start with the original path
-
-    // Apply remappings
-    Object.entries(remappings).forEach(([key, value]) => {
-      if (filePath.startsWith(value)) {
-        // Replace the matching part of the path with the remapping key
-        remappedPath = filePath.replace(value, key);
-      }
-    });
-
-
-
-    // Determine if the path was remapped
-    const isRemapped = remappedPath !== filePath;
-
-    // Use the remapped path if available, otherwise use the relative path
-    const finalPath = isRemapped ? remappedPath : `./${path.relative(currentDir, file).split(path.sep).join('/')}`;
-
-    const contractName = path.basename(file, '.sol');
-    const completionItem = new vscode.CompletionItem(`${contractName} from "${finalPath}"`, vscode.CompletionItemKind.File);
-
-    // Format the insert text based on whether the path was remapped
-    completionItem.insertText = `{${contractName}} from "${finalPath}";`;
-
-    return completionItem;
-  });
-  return completionItems;
-}
-
-function findSolidityFiles() {
-  // Define the glob pattern for Solidity files
-  const solidityFilePattern = '**/*.sol';
-  // Exclude files from the node_modules and out dirs 
-  const excludePattern = '{**/node_modules/**,**/out/**,**/test}';
-
-  // Use findFiles to search for files matching the Solidity pattern, excluding undesired paths
-  return vscode.workspace.findFiles(solidityFilePattern, excludePattern)
-    .then(files => files.map(file => file.fsPath)); // Convert URIs to file system paths
-
-}
-
-function resetRemappings() {
-  remappings = null;
-}
-
-
-
-
 const networkMap = {
   "1": "Ethereum",
   "8": "Ubiq",
@@ -214,4 +122,4 @@ const networkMap = {
 
 
 
-module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap, provideCompletionItems, resetRemappings };
+module.exports = { newWindowBeside, getContractRootDir, LANGID, networkMap };

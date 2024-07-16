@@ -40,7 +40,8 @@ const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
 
-const { provideCompletionItems, resetRemappings } = require("./helpers");
+const { provideCompletionItems, resetRemappings } = require("./completionItems.js");
+
 const { activate: activateSeparator } = require("./commands/separator.js");
 
 /** global vars */
