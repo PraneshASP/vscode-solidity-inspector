@@ -32,7 +32,7 @@ const {
 } = require("./commands/highlight-unused-imports")
 
 const {
-  generateDeploymentReportActiveFile, generateDeploymentReportContextMenu
+  generateDeploymentReportActiveFile, generateDeploymentReportContextMenu, statusBarItem
 } = require("./commands/deployment-report");
 
 const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("./commands/parse-tree");
@@ -169,6 +169,8 @@ function onActivate(context) {
   // Activate separator
   activateSeparator(context);
 
+  // Add status bar item to generate deployment summary
+  context.subscriptions.push(statusBarItem());
 }
 
 

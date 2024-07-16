@@ -147,6 +147,16 @@
         }
       ]
     },
+    "statusBar": [
+      {
+        "id": "deploymentReportStatus",
+        "alignment": "right",
+        "priority": 100,
+        "command": "vscode-solidity-inspector.statusBar.generateDeploymentReport",
+        "text": "$(file-code) Deployment summary",
+        "tooltip": "View Deployment results in a table format"
+      }
+    ],
     "grammars": [
       {
         "language": "tree",
