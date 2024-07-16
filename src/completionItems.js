@@ -33,7 +33,7 @@ async function loadRemappings(rootPath) {
   function extractNames(filePath) {
     const fileContent = fs.readFileSync(filePath, 'utf8');  
     const names = [];
-    const regex = /\b(contract|library|type)\s+(\w+)/g; // Regex to match contract, library and type definitions 
+    const regex = /\b(contract|library|type|interface)\s+(\w+)/g; // Regex to match contract, library, type and interface definitions 
     let match;
   
     while ((match = regex.exec(fileContent)) !== null) {
