@@ -1,18 +1,18 @@
 const vscode = require('vscode');
-const solc = require('solc');
 const path = require('path');
 const fs = require('fs');
 
 let decorationType;
 let workspaceRoot;
-let remappings = [];
+let foundryOutDir = 'out';  
+let hardhatOutDir = null;  
 
 function activate(context) {
-    console.log('contract-size: Activating extension');
+    console.info('contract-size: Activating extension');
     workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
-    console.log('contract-size: Workspace root:', workspaceRoot);
+    console.info('contract-size: Workspace root:', workspaceRoot);
 
-    loadRemappings();
+    loadConfig();
 
     decorationType = vscode.window.createTextEditorDecorationType({
         after: {
@@ -38,29 +38,51 @@ function activate(context) {
         updateDecorations(vscode.window.activeTextEditor.document);
     }
 
-    console.log('contract-size: Activation complete');
+    console.info('contract-size: Activation complete');
 }
 
-function loadRemappings() {
-    const remappingsPath = path.join(workspaceRoot, 'remappings.txt');
-    console.log('contract-size: Looking for remappings at:', remappingsPath);
-    if (fs.existsSync(remappingsPath)) {
-        const content = fs.readFileSync(remappingsPath, 'utf8');
-        remappings = content.split('\n')
-            .filter(line => line.trim() !== '')
-            .map(line => {
-                const [from, to] = line.split('=');
-                return { from: from.trim(), to: to.trim() };
-            });
-        console.log('contract-size: Loaded remappings:', remappings);
-    } else {
-        console.log('contract-size: No remappings.txt found');
+function loadConfig() {
+    const foundryConfigPath = path.join(workspaceRoot, 'foundry.toml');
+
+    if (fs.existsSync(foundryConfigPath)) {
+        console.info('contract-size: Foundry configuration detected');
+        const configContent = fs.readFileSync(foundryConfigPath, 'utf8');
+        const outDirMatch = configContent.match(/out\s*=\s*['"](.+)['"]/);
+        if (outDirMatch) {
+            foundryOutDir = outDirMatch[1];
+        }
+        console.info(`contract-size: Using Foundry out directory: ${foundryOutDir}`);
     }
+
+    // Search for Hardhat artifacts directory
+    hardhatOutDir = findArtifactsDir(workspaceRoot);
+    if (hardhatOutDir) {
+        console.info(`contract-size: Hardhat artifacts directory found: ${hardhatOutDir}`);
+    } else {
+        console.info('contract-size: Hardhat artifacts directory not found');
+    }
+}
+
+function findArtifactsDir(dir) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+        if (stat.isDirectory()) {
+            if (file === 'artifacts') {
+                return filePath;
+            } else {
+                const result = findArtifactsDir(filePath);
+                if (result) return result;
+            }
+        }
+    }
+    return null;
 }
 
 function updateDecorations(document) {
     const text = document.getText();
-    const contractSizes = compileAndGetSizes(document.fileName, text);
+    const contractSizes = getContractSizes(document.fileName);
     const decorations = [];
 
     const contractRegex = /contract\s+(\w+)(?:\s+is\s+[^{]+)?\s*{/g;
@@ -86,54 +108,43 @@ function updateDecorations(document) {
     vscode.window.activeTextEditor?.setDecorations(decorationType, decorations);
 }
 
-function compileAndGetSizes(fileName, source) {
-    const input = {
-        language: 'Solidity',
-        sources: { [fileName]: { content: source } },
-        settings: { outputSelection: { '*': { '*': ['evm.bytecode'] } } }
-    };
+function getContractSizes(fileName) {
+    const sizes = {};
+    const contractName = path.basename(fileName, '.sol');
 
-    try {
-        const output = JSON.parse(solc.compile(JSON.stringify(input), { import: findImports }));
-        if (output.errors?.some(error => error.severity === 'error')) {
-            console.error('contract-size: Compilation errors:', output.errors);
-            return {};
-        }
-
-        const sizes = {};
-        for (const [, contracts] of Object.entries(output.contracts)) {
-            for (const [name, contract] of Object.entries(contracts)) {
-                sizes[name] = contract.evm.bytecode.object.length / 2;
-            }
-        }
-        return sizes;
-    } catch (error) {
-        console.error('contract-size: Compilation failed:', error);
-        return {};
+    // Paths for both Foundry and Hardhat
+    const foundryJsonPath = path.join(workspaceRoot, foundryOutDir, `${path.basename(fileName)}`, `${contractName}.json`);
+    let hardhatJsonPath = null;
+    if (hardhatOutDir) {
+        const relativePath = path.relative(path.join(workspaceRoot, 'contracts'), fileName);
+        hardhatJsonPath = path.join(hardhatOutDir, relativePath, `${contractName}.json`);
     }
-}
 
-function findImports(importPath) {
-    console.log('contract-size: Resolving import:', importPath);
-    for (const remap of remappings) {
-        if (importPath.startsWith(remap.from)) {
-            const remappedPath = importPath.replace(remap.from, remap.to);
-            const fullPath = path.resolve(workspaceRoot, remappedPath);
-            if (fs.existsSync(fullPath)) {
-                console.log('contract-size: Resolved import via remappings:', fullPath);
-                return { contents: fs.readFileSync(fullPath, 'utf8') };
+    const jsonPaths = [foundryJsonPath, hardhatJsonPath].filter(Boolean);
+
+    for (const jsonPath of jsonPaths) {
+        try {
+            if (fs.existsSync(jsonPath)) {
+                const jsonContent = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+                const bytecode = jsonPath === hardhatJsonPath ? jsonContent.deployedBytecode : jsonContent.deployedBytecode.object;
+                sizes[contractName] = (bytecode.slice(2).length) / 2;
+                console.info(`contract-size: Size calculated for ${contractName} from ${jsonPath}`);
+                break; // Stop after finding the first valid file
             }
-        }
-        else {
-            console.log('contract-size: Resolved import without remappings:', importPath);
-            return { contents: fs.readFileSync(importPath, 'utf8') };
+        } catch (error) {
+            console.error(`contract-size: Error reading or parsing JSON for ${contractName} at ${jsonPath}:`, error);
         }
     }
-   
+
+    if (!sizes[contractName]) {
+        console.info(`contract-size: JSON file not found for ${contractName} in any expected location`);
+    }
+
+    return sizes;
 }
 
 function formatSize(bytes) {
-    return `${(bytes / 1024).toFixed(2) / 2} KB`;
+    return `${(bytes / 1024).toFixed(2)} KB`;
 }
 
 function getSizeColor(bytes) {
