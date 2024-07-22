@@ -33,6 +33,7 @@
     "onLanguage:tree"
   ],
   "contributes": {
+    
     "commands": [
       {
         "command": "vscode-solidity-inspector.activeFile.irOptimizer",
@@ -103,7 +104,13 @@
     "configuration": {
       "type": "object",
       "title": "Solidity Inspector",
-      "properties": {}
+      "properties": {
+        "solidityInspector.showContractSize": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show contract size information in the editor"
+         }
+       }
     },
     "keybindings": [
       {

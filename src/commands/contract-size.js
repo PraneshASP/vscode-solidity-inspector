@@ -81,6 +81,14 @@ function findArtifactsDir(dir) {
 }
 
 function updateDecorations(document) {
+    const config = vscode.workspace.getConfiguration('solidityInspector');
+    const showContractSize = config.get('showContractSize');
+
+    if (!showContractSize) {
+        // Clear decorations if the feature is disabled
+        vscode.window.activeTextEditor?.setDecorations(decorationType, []);
+        return;
+    }
     const text = document.getText();
     const contractSizes = getContractSizes(document.fileName);
     const decorations = [];
@@ -97,7 +105,7 @@ function updateDecorations(document) {
                 range,
                 renderOptions: {
                     after: {
-                        contentText: ` (${formatSize(size)})`,
+                        contentText: ` [${formatSize(size)}]`,
                         color: getSizeColor(size),
                     }
                 }
