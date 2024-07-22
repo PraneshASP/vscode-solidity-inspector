@@ -23,22 +23,27 @@ function activate(context) {
 
     context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument(event => {
-            if (event.document.languageId === 'solidity') {
+            if (event.document.languageId === 'solidity' && isNotScriptOrTest(event.document.fileName)) {
                 updateDecorations(event.document);
             }
         }),
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor?.document.languageId === 'solidity') {
+            if (editor?.document.languageId === 'solidity' && isNotScriptOrTest(editor.document.fileName)) {
                 updateDecorations(editor.document);
             }
         })
     );
 
-    if (vscode.window.activeTextEditor?.document.languageId === 'solidity') {
+    if (vscode.window.activeTextEditor?.document.languageId === 'solidity' && 
+        isNotScriptOrTest(vscode.window.activeTextEditor.document.fileName)) {
         updateDecorations(vscode.window.activeTextEditor.document);
     }
 
     console.info('contract-size: Activation complete');
+}
+
+function isNotScriptOrTest(fileName) {
+    return fileName.endsWith('.sol') && !fileName.endsWith('.t.sol') && !fileName.endsWith('.s.sol');
 }
 
 function loadConfig() {
@@ -84,11 +89,12 @@ function updateDecorations(document) {
     const config = vscode.workspace.getConfiguration('solidityInspector');
     const showContractSize = config.get('showContractSize');
 
-    if (!showContractSize) {
-        // Clear decorations if the feature is disabled
+    if (!showContractSize || !isNotScriptOrTest(document.fileName)) {
+        // Clear decorations if the feature is disabled or it's not a regular .sol file
         vscode.window.activeTextEditor?.setDecorations(decorationType, []);
         return;
     }
+
     const text = document.getText();
     const contractSizes = getContractSizes(document.fileName);
     const decorations = [];
