@@ -133,7 +133,7 @@ function statusBarItem() {
      if (activeEditor && activeEditor.document.fileName.endsWith('.json')) {
        await generateDeploymentReportActiveFile(activeEditor);
      } else {
-       vscode.window.showInformationMessage('Please open a JSON file to view the deployment report.');
+       vscode.window.showInformationMessage('Please open a foundry broadcast file (JSON) to view the summary.');
      }
      return statusBarItem;
    });
