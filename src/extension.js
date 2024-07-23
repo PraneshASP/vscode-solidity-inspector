@@ -8,40 +8,21 @@
 const vscode = require("vscode");
 
 
-const {
-  irOptimizerActiveFile,
-  irOptimizerContextMenu,
-} = require("./commands/ir-optimizer");
-
-const {
-  asmOptimizerActiveFile,
-  asmOptimizerContextMenu,
-} = require("./commands/asm-optimizer");
-const {
-  storageLayoutActiveFile,
-  storageLayoutContextMenu,
-} = require("./commands/storage-inspector");
-
-const {
-  flattenActiveFile,
-  flattenContextMenu,
-} = require("./commands/flatten")
-
-const {
-  unusedImportsActiveFile,
-} = require("./commands/highlight-unused-imports")
-
-const {
-  generateDeploymentReportActiveFile, generateDeploymentReportContextMenu
-} = require("./commands/deployment-report");
-
+const { irOptimizerActiveFile, irOptimizerContextMenu } = require("./commands/ir-optimizer");
+const { asmOptimizerActiveFile, asmOptimizerContextMenu } = require("./commands/asm-optimizer");
+const { storageLayoutActiveFile, storageLayoutContextMenu } = require("./commands/storage-inspector");
+const { flattenActiveFile, flattenContextMenu } = require("./commands/flatten");
+const { unusedImportsActiveFile } = require("./commands/highlight-unused-imports");
+const { generateDeploymentReportActiveFile, generateDeploymentReportContextMenu, statusBarItem } = require("./commands/deployment-report");
 const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("./commands/parse-tree");
 
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
 
-const { provideCompletionItems, resetRemappings } = require("./helpers");
+const { provideCompletionItems, resetRemappings } = require("./completionItems.js");
 
+const { activate: activateSeparator } = require("./commands/separator.js");
+const { activate: activateContractSizer } = require("./commands/contract-size.js");
 
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
@@ -152,19 +133,26 @@ function onActivate(context) {
   context.subscriptions.push(scaffoldActiveFileSubscription);
   context.subscriptions.push(scaffoldContextMenuSubscription);
 
-
   // Import suggestions. 
   context.subscriptions.push(vscode.languages.registerCompletionItemProvider('solidity', { provideCompletionItems }, ['"', "{"]));
   context.subscriptions.push(vscode.commands.registerCommand(EXTENSION_PREFIX + '.resetRemappings', () => {
     resetRemappings();
     vscode.window.showInformationMessage('Remappings have been refreshed!');
   }));
-
+ 
   vscode.window.visibleTextEditors.map(editor => {
     if (editor && editor.document && editor.document.languageId == "solidity") {
       unusedImportsActiveFile(editor);
     }
   });
+
+  // Activate separator
+  activateSeparator(context);
+
+  // Add status bar item to generate deployment summary
+  context.subscriptions.push(statusBarItem());
+
+  activateContractSizer(context);
 
 }
 

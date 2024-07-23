@@ -3,6 +3,8 @@ const fs = require("fs");
 const Table = require('cli-table3');
 const { networkMap } = require("../helpers");
 
+const EXTENSION_PREFIX = "vscode-solidity-inspector";
+
 function compressHash(txHash) {
     const first5 = txHash.substring(0, 5);
     const last5 = txHash.substring(txHash.length - 5);
@@ -41,7 +43,7 @@ async function createTableFromJson(file) {
 
     // For CREATE transactions
     const createTxTable = new Table({
-        head: [{ content: `Transaction Type: CREATE` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
+        head: [{ content: `New Deployments` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
         chars: {
             'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
             , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
@@ -55,7 +57,7 @@ async function createTableFromJson(file) {
 
     // For CALL transactions
     const callTxTable = new Table({
-        head: [{ content: `Transaction Type: CALL` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
+        head: [{ content: `Contract Calls` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
         chars: {
             'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
             , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
@@ -117,4 +119,24 @@ async function generateDeploymentReportContextMenu(clickedFile, selectedFiles) {
     }
 }
 
-module.exports = { generateDeploymentReportActiveFile, generateDeploymentReportContextMenu };
+function statusBarItem() {
+   // Add status bar item
+   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+   statusBarItem.command = EXTENSION_PREFIX + '.statusBar.generateDeploymentReport';
+   statusBarItem.text = '$(file-code) Deployment Summary';
+   statusBarItem.tooltip = 'View Deployment results in a table format';
+   statusBarItem.show();
+ 
+   // Register the command for the status bar item
+   vscode.commands.registerCommand(EXTENSION_PREFIX + '.statusBar.generateDeploymentReport', async () => {
+     const activeEditor = vscode.window.activeTextEditor;
+     if (activeEditor && activeEditor.document.fileName.endsWith('.json')) {
+       await generateDeploymentReportActiveFile(activeEditor);
+     } else {
+       vscode.window.showInformationMessage('Please open a foundry broadcast file (JSON) to view the summary.');
+     }
+     return statusBarItem;
+   });
+}
+
+module.exports = { generateDeploymentReportActiveFile, generateDeploymentReportContextMenu, statusBarItem };

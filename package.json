@@ -2,7 +2,7 @@
   "name": "vscode-solidity-inspector",
   "displayName": "Solidity Inspector",
   "description": "A vscode extension used to inspect Solidity files",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "engines": {
     "vscode": "^1.72.0"
   },
@@ -33,6 +33,7 @@
     "onLanguage:tree"
   ],
   "contributes": {
+    
     "commands": [
       {
         "command": "vscode-solidity-inspector.activeFile.irOptimizer",
@@ -103,7 +104,13 @@
     "configuration": {
       "type": "object",
       "title": "Solidity Inspector",
-      "properties": {}
+      "properties": {
+        "solidityInspector.showContractSize": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show contract size information in the editor"
+         }
+       }
     },
     "keybindings": [
       {
@@ -147,6 +154,16 @@
         }
       ]
     },
+    "statusBar": [
+      {
+        "id": "deploymentReportStatus",
+        "alignment": "right",
+        "priority": 100,
+        "command": "vscode-solidity-inspector.statusBar.generateDeploymentReport",
+        "text": "$(file-code) Deployment summary",
+        "tooltip": "View Deployment results in a table format"
+      }
+    ],
     "grammars": [
       {
         "language": "tree",
@@ -176,6 +193,8 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "cli-table3": "^0.6.3"
+    "cli-table3": "^0.6.3",
+    "path": "^0.12.7",
+    "solc": "^0.8.26"
   }
 }
