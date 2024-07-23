@@ -43,7 +43,7 @@ async function createTableFromJson(file) {
 
     // For CREATE transactions
     const createTxTable = new Table({
-        head: [{ content: `Transaction Type: CREATE` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
+        head: [{ content: `New Deployments` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
         chars: {
             'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
             , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
@@ -57,7 +57,7 @@ async function createTableFromJson(file) {
 
     // For CALL transactions
     const callTxTable = new Table({
-        head: [{ content: `Transaction Type: CALL` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
+        head: [{ content: `Contract Calls` }, { content: `Network: ${network}` }, { content: `Date: ${timestamp}` }],
         chars: {
             'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
             , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
