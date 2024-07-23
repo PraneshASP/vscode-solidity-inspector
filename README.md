@@ -25,6 +25,8 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Syntax highlighting of for `.tree` files.
 - Generate foundry test stub using [bulloak](https://github.com/alexfertel/bulloak)'s `scaffold` command. 
 - Auto-complete path suggestions for importing files and dependencies (with forge remappings support). 
+- Inline code-separator suggestion (solmate and solady style)
+- Contract code size decorator. 
 
 ---
 
@@ -82,6 +84,21 @@ https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b
 
 ---
 
+#### Inline separator suggestions: 
+
+[![]()](https://github.com/user-attachments/assets/abbbd466-520f-464e-aa59-1ba628a57d18)
+
+---
+
+#### Inline contract size decoration:
+> [!TIP] 
+> This uses the `deployedBytecode` object from the build file. So it will get updated only after every build. This setting can be also turned on/off via the extension settings.
+
+![](./assets/inline-contract-size.png)
+
+---
+
+> [!NOTE] 
 > For more demos, see [./assets](https://github.com/PraneshASP/vscode-solidity-inspector/tree/main/assets)
 
 <!-- CONTRIBUTING -->
