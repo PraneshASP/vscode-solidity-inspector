@@ -8,33 +8,12 @@
 const vscode = require("vscode");
 
 
-const {
-  irOptimizerActiveFile,
-  irOptimizerContextMenu,
-} = require("./commands/ir-optimizer");
-
-const {
-  asmOptimizerActiveFile,
-  asmOptimizerContextMenu,
-} = require("./commands/asm-optimizer");
-const {
-  storageLayoutActiveFile,
-  storageLayoutContextMenu,
-} = require("./commands/storage-inspector");
-
-const {
-  flattenActiveFile,
-  flattenContextMenu,
-} = require("./commands/flatten")
-
-const {
-  unusedImportsActiveFile,
-} = require("./commands/highlight-unused-imports")
-
-const {
-  generateDeploymentReportActiveFile, generateDeploymentReportContextMenu, statusBarItem
-} = require("./commands/deployment-report");
-
+const { irOptimizerActiveFile, irOptimizerContextMenu } = require("./commands/ir-optimizer");
+const { asmOptimizerActiveFile, asmOptimizerContextMenu } = require("./commands/asm-optimizer");
+const { storageLayoutActiveFile, storageLayoutContextMenu } = require("./commands/storage-inspector");
+const { flattenActiveFile, flattenContextMenu } = require("./commands/flatten");
+const { unusedImportsActiveFile } = require("./commands/highlight-unused-imports");
+const { generateDeploymentReportActiveFile, generateDeploymentReportContextMenu, statusBarItem } = require("./commands/deployment-report");
 const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("./commands/parse-tree");
 
 
@@ -43,6 +22,7 @@ const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-
 const { provideCompletionItems, resetRemappings } = require("./completionItems.js");
 
 const { activate: activateSeparator } = require("./commands/separator.js");
+const { activate: activateContractSizer } = require("./commands/contract-size.js");
 
 /** global vars */
 const EXTENSION_PREFIX = "vscode-solidity-inspector";
@@ -171,6 +151,9 @@ function onActivate(context) {
 
   // Add status bar item to generate deployment summary
   context.subscriptions.push(statusBarItem());
+
+  activateContractSizer(context);
+
 }
 
 
