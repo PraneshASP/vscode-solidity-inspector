@@ -33,7 +33,6 @@
     "onLanguage:tree"
   ],
   "contributes": {
-    
     "commands": [
       {
         "command": "vscode-solidity-inspector.activeFile.irOptimizer",
@@ -109,8 +108,8 @@
           "type": "boolean",
           "default": true,
           "description": "Show contract size information in the editor"
-         }
-       }
+        }
+      }
     },
     "keybindings": [
       {
@@ -194,7 +193,6 @@
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
-    "path": "^0.12.7",
-    "solc": "^0.8.26"
+    "path": "^0.12.7"
   }
 }
