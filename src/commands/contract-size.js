@@ -130,13 +130,12 @@ function getContractSizes(fileName) {
     const foundryJsonPath = path.join(workspaceRoot, foundryOutDir, `${path.basename(fileName)}`, `${contractName}.json`);
     let hardhatJsonPath = null;
     if (hardhatOutDir) {
-        const relativePath = path.relative(path.join(workspaceRoot, 'contracts'), fileName);
+        const relativePath = path.relative(workspaceRoot, fileName);
         hardhatJsonPath = path.join(hardhatOutDir, relativePath, `${contractName}.json`);
     }
 
     const jsonPaths = [foundryJsonPath, hardhatJsonPath].filter(Boolean);
-
-    for (const jsonPath of jsonPaths) {
+     for (const jsonPath of jsonPaths) {
         try {
             if (fs.existsSync(jsonPath)) {
                 const jsonContent = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
