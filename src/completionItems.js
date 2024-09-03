@@ -103,8 +103,10 @@ async function loadRemappings(rootPath) {
         }
   
         const completionItem = new vscode.CompletionItem(`${name} from "${finalPath}"`, vscode.CompletionItemKind.File);
-        completionItem.insertText = `{ ${name} } from "${finalPath}";`;
-  
+        const currentLineRange = document.lineAt(position.line).text.length;
+        const rangeToRemove = new vscode.Range(position.line, 0, position.line, position.character + currentLineRange);
+        completionItem.insertText = `import { ${name} } from "${finalPath}";`;
+        completionItem.additionalTextEdits = [vscode.TextEdit.delete(rangeToRemove)];
         return completionItem;
       });
     });
