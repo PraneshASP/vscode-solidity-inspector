@@ -57,20 +57,25 @@ The usage of this extension is straightforward.
 
 #### Highlights unused imports:
 
-https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/e4906ad3-69e6-4cea-b986-7712ec342fca
-
+<video width="700" height="480" controls>
+ <source src="https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/e4906ad3-69e6-4cea-b986-7712ec342fca">
+</video>
 
 ---
 
 #### Generate foundry deployment report:
 
-https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/cfaf987e-ad91-4927-9042-7562bc8684dc
+<video width="700" height="480" controls>
+ <source src="https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/cfaf987e-ad91-4927-9042-7562bc8684dc">
+</video>
 
 ---
 
 #### Support for `.tree` files and test stub generation: 
 
-https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b-bc80-46cc-88c9-7e4faa0bb043
+<video width="700" height="480" controls>
+ <source src="https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b-bc80-46cc-88c9-7e4faa0bb043">
+</video>
 
 ---
 
@@ -86,7 +91,9 @@ https://github.com/PraneshASP/vscode-solidity-inspector/assets/42379522/2a3d591b
 
 #### Inline separator suggestions: 
 
-[![]()](https://github.com/user-attachments/assets/abbbd466-520f-464e-aa59-1ba628a57d18)
+<video width="700" height="480" controls>
+ <source src="https://github.com/user-attachments/assets/abbbd466-520f-464e-aa59-1ba628a57d18">
+</video>
 
 ---
 
