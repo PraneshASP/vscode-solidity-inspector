@@ -14,7 +14,7 @@ async function storageLayoutActiveFile(args) {
     let contractDir = await getContractRootDir(contractPathArray.join("/"));
 
     cp.exec(
-      `cd ${contractDir} && forge inspect --pretty ${contractName} storage`,
+      `cd ${contractDir} && forge inspect ${contractName} storage`,
       (err, stdout, stderr) => {
         if (err) {
           vscode.window.showErrorMessage(
@@ -46,7 +46,7 @@ async function storageLayoutContextMenu(clickedFile, selectedFiles) {
     let contractDir = await getContractRootDir(contractPathArray.join("/"));
 
     cp.exec(
-      `cd ${contractDir} && forge inspect --pretty ${contractName} storage`,
+      `cd ${contractDir} && forge inspect ${contractName} storage`,
       (err, stdout, stderr) => {
         if (err) {
           vscode.window.showErrorMessage(
