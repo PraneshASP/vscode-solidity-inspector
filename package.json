@@ -98,6 +98,31 @@
         "command": "vscode-solidity-inspector.contextMenu.scaffold",
         "title": "Solidity Inspector: scaffold",
         "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.activeFile.gasAnalysis",
+        "title": "Gas Analysis",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.contextMenu.gasAnalysis",
+        "title": "SolidityInspector: gas analysis",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.codelens.gasAnalysisAll",
+        "title": "Gas Analysis - All Tests",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.codelens.gasAnalysisFile",
+        "title": "Gas Analysis - This File",
+        "category": "Solidity Inspector"
+      },
+      {
+        "command": "vscode-solidity-inspector.codelens.gasAnalysisTest",
+        "title": "Gas Analysis - Specific Test",
+        "category": "Solidity Inspector"
       }
     ],
     "configuration": {
@@ -150,6 +175,11 @@
           "group": "solidity",
           "command": "vscode-solidity-inspector.contextMenu.scaffold",
           "when": "resourceFilename =~ /\\.tree/"
+        },
+        {
+          "group": "solidity",
+          "command": "vscode-solidity-inspector.contextMenu.gasAnalysis",
+          "when": "resourceLangId == solidity && resourceFilename =~ /\\.t\\.sol/"
         }
       ]
     },
