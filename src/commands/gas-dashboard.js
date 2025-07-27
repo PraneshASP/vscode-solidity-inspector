@@ -22,9 +22,9 @@ class GasDashboard {
                 forgeArgs.push(`--match-test=${testFilter}`);
             }
             if (contractFilter) {
-                forgeArgs.push(`--match-contract=${contractFilter}`);
+                forgeArgs.push(`--match-path=${contractFilter}`);
             }
-
+            console.log(`Forge command: forge ${forgeArgs.join(" ")}`);
             const forge = cp.spawn("forge", forgeArgs, { 
                 cwd: contractDir,
                 stdio: "pipe" 
@@ -95,6 +95,7 @@ class GasDashboard {
             });
 
             forge.on("error", (err) => {
+                console.error("Error running forge tests:", err);
                 reject(err);
             });
         });
@@ -155,11 +156,40 @@ class GasDashboard {
         });
     }
 
+    calculateGasStatistics(gasValues) {
+        if (gasValues.length === 0) return null;
+        
+        const sorted = [...gasValues].sort((a, b) => a - b);
+        const mean = gasValues.reduce((sum, val) => sum + val, 0) / gasValues.length;
+        const variance = gasValues.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / gasValues.length;
+        const stdDev = Math.sqrt(variance);
+        
+        const q1Index = Math.floor(sorted.length * 0.25);
+        const q3Index = Math.floor(sorted.length * 0.75);
+        const medianIndex = Math.floor(sorted.length * 0.5);
+        
+        return {
+            min: sorted[0],
+            max: sorted[sorted.length - 1],
+            mean: Math.round(mean),
+            median: sorted[medianIndex],
+            q1: sorted[q1Index],
+            q3: sorted[q3Index],
+            stdDev: Math.round(stdDev),
+            iqr: sorted[q3Index] - sorted[q1Index]
+        };
+    }
+
     generateDashboardHTML() {
         const tests = Array.from(this.testResults.values());
         const totalTests = this.totalTestCount > 0 ? this.totalTestCount : tests.length;
         const totalGas = tests.reduce((sum, t) => sum + t.gas, 0);
         const avgGas = totalTests > 0 ? Math.round(totalGas / totalTests) : 0;
+
+        // Calculate gas statistics
+        const gasValues = tests.map(t => t.gas).sort((a, b) => a - b);
+        const gasStats = this.calculateGasStatistics(gasValues);
+        const gasOutliers = tests.filter(t => t.gas > gasStats.mean + 2 * gasStats.stdDev);
 
         return `
 <!DOCTYPE html>
@@ -170,30 +200,42 @@ class GasDashboard {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Geist Mono', Tahoma, Geneva, Verdana, sans-serif; 
             font-size: 12px;
-            background: var(--vscode-editor-background);
-            color: var(--vscode-editor-foreground);
+            background: #000000ff;
+            color: #ccc;
             line-height: 1.3;
             padding: 16px;
+            min-height: 100vh;
         }
         .container { max-width: 1200px; margin: 0 auto; }
         
         .header {
-            background: var(--vscode-panel-background);
-            border: 1px solid var(--vscode-panel-border);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a00 100%);
+            border: 1px solid #331100;
             border-radius: 4px;
             padding: 20px;
             margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #ff6600, #ff9900, #ffcc00);
+            opacity: 0.6;
         }
         
         .header h1 { 
             font-size: 20px; 
-            color: var(--vscode-editor-foreground);
+            color: #ff8800;
             margin-bottom: 4px;
+            font-weight: 500;
         }
         .header p { 
-            color: var(--vscode-descriptionForeground);
+            color: #666;
             font-size: 12px;
         }
         .stats { 
@@ -205,18 +247,18 @@ class GasDashboard {
         .stat-value { 
             font-size: 17px; 
             font-weight: 600; 
-            color: var(--vscode-textLink-foreground);
+            color: #ff9900;
         }
         .stat-label { 
-            color: var(--vscode-descriptionForeground);
+            color: #666;
             font-size: 11px; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
         .controls {
-            background: var(--vscode-panel-background);
-            border: 1px solid var(--vscode-panel-border);
+            background: #0a0a0a;
+            border: 1px solid #222;
             padding: 12px;
             border-radius: 4px;
             margin-bottom: 16px;
@@ -226,16 +268,17 @@ class GasDashboard {
         }
         .controls input, .controls select {
             padding: 6px 8px;
-            background: var(--vscode-input-background);
-            border: 1px solid var(--vscode-input-border);
+            background: #111;
+            border: 1px solid #333;
             border-radius: 2px;
             font-size: 12px;
-            color: var(--vscode-input-foreground);
+            color: #ccc;
             font-family: inherit;
+            font-weight: 300;
         }
         .controls input:focus, .controls select:focus {
             outline: none;
-            border-color: var(--vscode-focusBorder);
+            border-color: #ff6600;
         }
         
         .grid { 
@@ -245,81 +288,107 @@ class GasDashboard {
         }
         
         .panel {
-            background: var(--vscode-panel-background);
-            border: 1px solid var(--vscode-panel-border);
+            background: #0a0a0a;
+            border: 1px solid #222;
             border-radius: 4px;
             padding: 16px;
         }
         .panel h3 { 
             margin-bottom: 12px; 
-            color: var(--vscode-editor-foreground);
+            color: #ff8800;
             font-size: 14px;
             font-weight: 500;
-            border-bottom: 1px solid var(--vscode-panel-border);
+            border-bottom: 1px solid #222;
             padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel h3::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(180deg, #ff6600, #ff9900);
+            border-radius: 2px;
         }
         
         .test-list { 
             max-height: 500px; 
             overflow-y: auto; 
+            scrollbar-width: thin;
+            scrollbar-color: #333 #111;
+        }
+        .test-list::-webkit-scrollbar { width: 4px; }
+        .test-list::-webkit-scrollbar-track { background: #111; }
+        .test-list::-webkit-scrollbar-thumb { 
+            background: #333; 
+            border-radius: 2px; 
         }
         
         .test-item {
             padding: 8px;
-            border: 1px solid var(--vscode-panel-border);
+            border: 1px solid #222;
             border-radius: 2px;
             margin-bottom: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
-            background: var(--vscode-list-inactiveSelectionBackground);
+            background: #111;
         }
         .test-item:hover { 
-            border-color: var(--vscode-list-hoverBackground);
-            background: var(--vscode-list-hoverBackground);
+            border-color: #ff6600; 
+            background: #1a1100;
         }
         .test-item.selected { 
-            border-color: var(--vscode-list-activeSelectionBackground);
-            background: var(--vscode-list-activeSelectionBackground);
+            border-color: #ff8800; 
+            background: #1a1100;
         }
         
         .test-name { 
             font-weight: 500; 
             font-size: 11px; 
-            color: var(--vscode-editor-foreground);
+            color: #eee;
             margin-bottom: 2px;
         }
         .test-gas { 
-            color: var(--vscode-descriptionForeground);
+            color: #777;
             font-size: 11px; 
         }
         .gas-bar {
             height: 2px;
             border-radius: 1px;
             margin-top: 4px;
-            background: var(--vscode-progressBar-background);
+            background: linear-gradient(90deg, #ff6600 0%, #ff9900 50%, #ffcc00 100%);
             opacity: 0.8;
         }
         
         .trace-viewer { 
             max-height: 500px; 
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #333 #111;
+        }
+        .trace-viewer::-webkit-scrollbar { width: 4px; }
+        .trace-viewer::-webkit-scrollbar-track { background: #111; }
+        .trace-viewer::-webkit-scrollbar-thumb { 
+            background: #333; 
+            border-radius: 2px; 
         }
         
         .trace-summary {
-            background: var(--vscode-editor-background);
-            border: 1px solid var(--vscode-panel-border);
+            background: #111;
+            border: 1px solid #333;
             border-radius: 3px;
             padding: 10px;
             margin-bottom: 10px;
-            font-size: 11px;
+            font-size: 12px;
         }
         .trace-summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 2px;
         }
-        .trace-summary-label { color: var(--vscode-descriptionForeground); }
-        .trace-summary-value { color: var(--vscode-textLink-foreground); font-weight: 500; }
+        .trace-summary-label { color: #777; }
+        .trace-summary-value { color: #ff9900; font-weight: 500; }
         
         .trace-item {
             position: relative;
@@ -329,16 +398,16 @@ class GasDashboard {
         
         .trace-content {
             padding: 6px 12px;
-            background: var(--vscode-editor-background);
+            background: #111;
             border-radius: 3px;
-            font-size: 11px;
-            border-left: 2px solid var(--vscode-panel-border);
+            font-size: 12px;
+            border-left: 2px solid #333;
             transition: all 0.2s ease;
             margin-left: var(--depth-margin);
         }
         .trace-content:hover {
-            border-left-color: var(--vscode-textLink-foreground);
-            background: var(--vscode-list-hoverBackground);
+            border-left-color: #ff6600;
+            background: #1a1100;
         }
         
         .trace-header {
@@ -359,23 +428,23 @@ class GasDashboard {
         }
         .trace-function { 
             font-weight: 500; 
-            color: var(--vscode-editor-foreground);
+            color: #eee;
             font-size: 11px;
         }
         .trace-gas { 
-            color: var(--vscode-textLink-foreground);
+            color: #ff9900;
             font-weight: 600;
             font-size: 11px;
         }
         .trace-details {
-            color: var(--vscode-descriptionForeground);
-            font-size: 10px;
+            color: #777;
+            font-size: 11px;
             display: flex;
             gap: 10px;
             margin-top: 2px;
         }
         .trace-gas-percent {
-            color: var(--vscode-textLink-foreground);
+            color: #ff9900;
             font-weight: 500;
         }
         
@@ -383,19 +452,20 @@ class GasDashboard {
             display: inline-block;
             padding: 1px 4px;
             border-radius: 2px;
-            font-size: 8px;
+            font-size: 8.5px;
             font-weight: 500;
             text-transform: uppercase;
             margin-right: 6px;
-            background: var(--vscode-badge-background);
-            color: var(--vscode-badge-foreground);
         }
+        .trace-type.call { background: #333; color: #ccc; }
+        .trace-type.static { background: #002233; color: #0099cc; }
+        .trace-type.delegate { background: #331100; color: #ff9900; }
         
         .loading {
             text-align: center;
             padding: 40px;
             font-size: 11px;
-            color: var(--vscode-descriptionForeground);
+            color: #666;
         }
         
         .depth-0 { --depth-margin: 8px; }
@@ -414,19 +484,19 @@ class GasDashboard {
         .suite-table td {
             padding: 8px 12px;
             text-align: left;
-            border-bottom: 1px solid var(--vscode-panel-border);
+            border-bottom: 1px solid #222;
         }
         .suite-table th {
-            background: var(--vscode-panel-background);
-            color: var(--vscode-editor-foreground);
+            background: #0a0a0a;
+            color: #ff8800;
             font-weight: 500;
         }
         .suite-table td {
-            background: var(--vscode-editor-background);
+            background: #111;
         }
         .suite-name {
             font-family: monospace;
-            color: var(--vscode-textLink-foreground);
+            color: #ff9900;
         }
         .suite-passed {
             color: #4CAF50;
@@ -437,15 +507,125 @@ class GasDashboard {
             font-weight: 500;
         }
         .suite-time {
-            color: var(--vscode-descriptionForeground);
+            color: #777;
         }
+        
+        .gas-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-box {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 3px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-box-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff9900;
+            margin-bottom: 4px;
+        }
+        .stat-box-label {
+            color: #777;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .gas-histogram {
+            height: 120px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 3px;
+            margin-bottom: 16px;
+            position: relative;
+            padding: 8px;
+            display: flex;
+            align-items: end;
+            gap: 2px;
+        }
+        .histogram-bar {
+            background: linear-gradient(180deg, #ff6600, #ff9900);
+            border-radius: 2px 2px 0 0;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+            min-width: 4px;
+            position: relative;
+        }
+        .histogram-bar:hover {
+            opacity: 1;
+        }
+        .histogram-bar::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #ff9900;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .histogram-bar:hover::after {
+            opacity: 1;
+        }
+        
+        .outliers-section {
+            border-top: 1px solid #333;
+            padding-top: 12px;
+        }
+        .outliers-section h4 {
+            color: #ff8800;
+            font-size: 12px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .outliers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .outlier-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            background: #1a0500;
+            border: 1px solid #441100;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .outlier-item:hover {
+            border-color: #ff6600;
+            background: #2a0800;
+        }
+        .outlier-name {
+            font-size: 10px;
+            color: #eee;
+        }
+        .outlier-gas {
+            font-size: 10px;
+            color: #ff6600;
+            font-weight: 600;
+        }
+        .outlier-duration {
+            font-size: 10px;
+            color: #ff6600;
+            font-weight: 600;
+        }
+        
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Gas Analysis Dashboard</h1>
-            <p>Gas consumption analysis for Foundry tests</p>
+            <h1>Foundry Gas Analysis Dashboard</h1>
+            <p>Auto Generated by VSCode Solidity Inspector</p>
             <div class="stats">
                 <div class="stat">
                     <div class="stat-value">${totalTests}</div>
@@ -490,6 +670,40 @@ class GasDashboard {
         </div>
         ` : ''}
         
+        ${gasStats ? `
+        <div class="panel">
+            <h3>Gas Usage Distribution</h3>
+            <div class="gas-stats-grid">
+                <div class="stat-box">
+                    <div class="stat-box-value">${(gasStats.min / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">min</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">${(gasStats.q1 / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">q1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">${(gasStats.median / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">median</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">${(gasStats.q3 / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">q3</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">${(gasStats.max / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">max</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value">±${(gasStats.stdDev / 1000).toFixed(1)}k</div>
+                    <div class="stat-box-label">std dev</div>
+                </div>
+            </div>
+            
+            <div class="gas-histogram" id="gasHistogram"></div>
+        </div>
+        ` : ''}
+
         <div class="controls">
             <input type="text" id="searchTests" placeholder="Search tests..." />
             <select id="sortBy">
@@ -541,6 +755,8 @@ class GasDashboard {
 
     <script>
         const testData = ${JSON.stringify(tests)};
+        const gasStats = ${JSON.stringify(gasStats)};
+        const gasValues = ${JSON.stringify(gasValues)};
         let selectedTest = null;
         
         document.getElementById('searchTests').addEventListener('input', filterTests);
@@ -550,6 +766,10 @@ class GasDashboard {
         document.addEventListener('click', (e) => {
             if (e.target.closest('.test-item')) {
                 const testName = e.target.closest('.test-item').dataset.test;
+                selectTest(testName);
+            }
+            if (e.target.closest('.outlier-item')) {
+                const testName = e.target.closest('.outlier-item').dataset.test;
                 selectTest(testName);
             }
         });
@@ -654,8 +874,37 @@ class GasDashboard {
             items.forEach(item => container.appendChild(item));
         }
         
+        function generateHistogram() {
+            const container = document.getElementById('gasHistogram');
+            if (!container || !gasValues || gasValues.length === 0) return;
+            
+            const numBins = Math.min(20, Math.max(5, Math.ceil(Math.sqrt(gasValues.length))));
+            const min = Math.min(...gasValues);
+            const max = Math.max(...gasValues);
+            const binSize = (max - min) / numBins;
+            
+            const bins = Array(numBins).fill(0);
+            gasValues.forEach(gas => {
+                const binIndex = Math.min(numBins - 1, Math.floor((gas - min) / binSize));
+                bins[binIndex]++;
+            });
+            
+            const maxCount = Math.max(...bins);
+            container.innerHTML = bins.map((count, i) => {
+                const height = count === 0 ? 2 : Math.max(8, (count / maxCount) * 100);
+                const startGas = min + (i * binSize);
+                const endGas = min + ((i + 1) * binSize);
+                return \`<div class="histogram-bar" 
+                            style="height: \${height}px; flex: 1;" 
+                            data-count="\${count}"
+                            title="\${count} tests: \${(startGas/1000).toFixed(1)}k - \${(endGas/1000).toFixed(1)}k gas">
+                        </div>\`;
+            }).join('');
+        }
+        
         if (testData.length > 0) {
             selectTest(testData[0].name);
+            generateHistogram();
         }
     </script>
 </body>
@@ -667,18 +916,22 @@ async function gasAnalysisActiveFile() {
     let activeDoc = vscode.window.activeTextEditor.document;
     let activeFile = activeDoc.fileName;
 
-    if (!activeFile.endsWith(".t.sol")) {
+    if (!activeFile.endsWith(".t.sol") && !activeFile.endsWith("Test.sol")) {
         vscode.window.showErrorMessage("Gas analysis is only available for Foundry test files (.t.sol)");
         return;
     }
-
+    console.log("Active file for gas analysis:", activeFile);
     const contractPathArray = activeFile.split("/");
     let contractName = contractPathArray[contractPathArray.length - 1];
-    contractName = contractName.substring(0, contractName.length - 6); // Remove .t.sol
+    if (contractName.endsWith(".t.sol")) {
+        contractName = contractName.substring(0, contractName.length - 6); // Remove .t.sol
+    } else if (contractName.endsWith("Test.sol")) {
+        contractName = contractName.substring(0, contractName.length - 4); // Remove .sol
+    }
     contractPathArray.pop();
 
     let contractDir = await getContractRootDir(contractPathArray.join("/"));
-    
+    console.log("Contract path array:", contractPathArray);
     if (!contractDir || contractDir === "__null__") {
         vscode.window.showErrorMessage("Could not find foundry.toml. Make sure you're in a Foundry project.");
         return;
@@ -691,7 +944,7 @@ async function gasAnalysisActiveFile() {
     }, async (progress) => {
         try {
             const dashboard = new GasDashboard();
-            await dashboard.runForgeTests(contractDir, "", contractName);
+            await dashboard.runForgeTests(contractDir, "", activeFile);
             
             const panel = vscode.window.createWebviewPanel(
                 'gasAnalysis',
@@ -711,10 +964,10 @@ async function gasAnalysisActiveFile() {
 }
 
 async function gasAnalysisContextMenu(clickedFile, selectedFiles) {
-    const testFiles = selectedFiles.filter(file => file.path.endsWith(".t.sol"));
+    const testFiles = selectedFiles.filter(file => file.path.endsWith(".t.sol") || file.path.endsWith("Test.sol"));
     
     if (testFiles.length === 0) {
-        vscode.window.showErrorMessage("No test files selected. Gas analysis is only available for .t.sol files.");
+        vscode.window.showErrorMessage("No test files selected. Gas analysis is only available for .t.sol and Test.sol files.");
         return;
     }
 

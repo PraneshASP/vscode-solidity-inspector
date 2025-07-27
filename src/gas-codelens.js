@@ -12,7 +12,7 @@ class GasAnalysisCodeLensProvider {
     }
 
     provideCodeLenses(document, token) {
-        if (!document.fileName.endsWith('.t.sol')) {
+        if (!document.fileName.endsWith('.t.sol') && !document.fileName.endsWith('Test.sol')) {
             return [];
         }
 
