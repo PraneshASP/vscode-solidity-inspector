@@ -18,6 +18,8 @@ const { treeFilesCodeActionProvider, treeFilesDiagnosticCollection } = require("
 
 
 const { scaffoldActiveFile, scaffoldContextMenu } = require("./commands/bulloak-scaffold");
+const { gasAnalysisActiveFile, gasAnalysisContextMenu, gasAnalysisAllTests, gasAnalysisSpecificTest } = require("./commands/gas-dashboard");
+const { GasAnalysisCodeLensProvider } = require("./gas-codelens");
 
 const { provideCompletionItems, resetRemappings } = require("./completionItems.js");
 
@@ -93,6 +95,31 @@ const scaffoldContextMenuSubscription = vscode.commands.registerCommand(
   scaffoldContextMenu
 );
 
+const gasAnalysisActiveFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".activeFile.gasAnalysis",
+  gasAnalysisActiveFile
+);
+
+const gasAnalysisContextMenuSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".contextMenu.gasAnalysis",
+  gasAnalysisContextMenu
+);
+
+const gasAnalysisAllTestsSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".codelens.gasAnalysisAll",
+  gasAnalysisAllTests
+);
+
+const gasAnalysisFileSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".codelens.gasAnalysisFile",
+  (contractName) => gasAnalysisActiveFile()
+);
+
+const gasAnalysisTestSubscription = vscode.commands.registerCommand(
+  EXTENSION_PREFIX + ".codelens.gasAnalysisTest",
+  gasAnalysisSpecificTest
+);
+
 /** event funcs */
 function onActivate(context) {
   vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -132,6 +159,17 @@ function onActivate(context) {
 
   context.subscriptions.push(scaffoldActiveFileSubscription);
   context.subscriptions.push(scaffoldContextMenuSubscription);
+
+  // Gas Analysis commands
+  context.subscriptions.push(gasAnalysisActiveFileSubscription);
+  context.subscriptions.push(gasAnalysisContextMenuSubscription);
+  context.subscriptions.push(gasAnalysisAllTestsSubscription);
+  context.subscriptions.push(gasAnalysisFileSubscription);
+  context.subscriptions.push(gasAnalysisTestSubscription);
+
+  // Gas Analysis CodeLens provider
+  const gasAnalysisCodeLensProvider = new GasAnalysisCodeLensProvider();
+  context.subscriptions.push(vscode.languages.registerCodeLensProvider('solidity', gasAnalysisCodeLensProvider));
 
   // Import suggestions. 
   context.subscriptions.push(vscode.languages.registerCompletionItemProvider('solidity', { provideCompletionItems }, ['"', "{"]));
