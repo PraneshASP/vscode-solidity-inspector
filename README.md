@@ -27,6 +27,7 @@ TL;DR, this is my first VSCode extension, so feel free to provide feedback as I 
 - Auto-complete path suggestions for importing files and dependencies (with forge remappings support). 
 - Inline code-separator suggestion (solmate and solady style)
 - Contract code size decorator. 
+- Foundry test analysis dashboard (supports per test, per suite or all tests)
 
 ---
 
